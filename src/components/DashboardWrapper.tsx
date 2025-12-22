@@ -63,54 +63,55 @@ const LogoutIcon = ({ className }: { className?: string }) => (
 
 export default function DashboardWrapper({ children }: { children: React.ReactNode }) {
   const [role, setRole] = useState<'employee' | 'hr' | null>(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     setRole(getRole());
   }, []);
 
   const navigationItems = [
-    { 
-      href: '/dashboard', 
-      label: 'Календарь ДР', 
+    {
+      href: '/dashboard',
+      label: 'Календарь ДР',
       icon: CalendarIcon,
       description: 'Просмотр дней рождения'
     },
-    { 
-      href: '/dashboard/colleagues', 
-      label: 'Коллеги', 
+    {
+      href: '/dashboard/colleagues',
+      label: 'Коллеги',
       icon: UsersIcon,
       description: 'Список сотрудников'
     },
-    { 
-      href: '/dashboard/profile', 
-      label: 'Мой профиль', 
+    {
+      href: '/dashboard/profile',
+      label: 'Мой профиль',
       icon: UserIcon,
       description: 'Настройки профиля'
     },
   ];
 
   const hrItems = [
-    { 
-      href: '/dashboard/employees', 
-      label: 'Сотрудники', 
+    {
+      href: '/dashboard/employees',
+      label: 'Сотрудники',
       icon: UserIcon,
       description: 'Управление персоналом'
     },
-    { 
-      href: '/dashboard/card-templates', 
-      label: 'Шаблоны открыток', 
+    {
+      href: '/dashboard/card-templates',
+      label: 'Шаблоны открыток',
       icon: DocumentIcon,
       description: 'Создание шаблонов'
     },
-    { 
-      href: '/dashboard/settings', 
-      label: 'Настройки рассылки', 
+    {
+      href: '/dashboard/settings',
+      label: 'Настройки рассылки',
       icon: CogIcon,
       description: 'Конфигурация системы'
     },
-    { 
-      href: '/dashboard/birthday-history', 
-      label: 'История отправок', 
+    {
+      href: '/dashboard/birthday-history',
+      label: 'История отправок',
       icon: MailIcon,
       description: 'Отчеты по рассылке'
     },
@@ -121,94 +122,137 @@ export default function DashboardWrapper({ children }: { children: React.ReactNo
     window.location.href = '/';
   };
 
+  const toggleMobileMenu = () => {
+    setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
   return (
-    <div className="min-h-screen bg-background-50">
-      {/* Header with clean design */}
+    <div className="min-h-screen bg-background-50 flex flex-col">
+      {/* Header with responsive design */}
       <header className="bg-white border-b border-neutral-200 sticky top-0 z-50 shadow-subtle">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
+        <div className="max-w-7xl mx-auto px-2 sm:px-4 md:px-6 lg:px-8 w-full">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center h-auto sm:h-16 w-full py-2 sm:py-0">
             {/* Logo and Brand */}
-            <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-neutral-600 rounded-lg flex items-center justify-center">
-                <GiftIcon className="w-6 h-6 text-white" />
+            <div className="flex items-center space-x-2 md:space-x-3 mb-2 sm:mb-0">
+              <div className="w-8 h-8 md:w-10 md:h-10 bg-neutral-600 rounded-lg flex items-center justify-center">
+                <GiftIcon className="w-4 h-4 md:w-6 md:h-6 text-white" />
               </div>
               <div>
-                <h1 className="text-xl font-semibold text-neutral-800">
+                <h1 className="text-lg md:text-xl font-semibold text-neutral-800">
                   BirthdayFlow
                 </h1>
-                <p className="text-xs text-neutral-600">Система корпоративных поздравлений</p>
+                <p className="text-xs text-neutral-600 hidden md:block">Система корпоративных поздравлений</p>
               </div>
             </div>
 
-            {/* Tech Stack Badge */}
+            {/* Desktop Tech Stack Badge */}
             <div className="hidden md:flex items-center space-x-2">
-              <div className="bg-neutral-100 text-neutral-700 px-3 py-1 rounded-md text-xs font-medium">
+              <div className="bg-neutral-100 text-neutral-700 px-2 md:px-3 py-1 rounded-md text-xs font-medium">
                 Next.js
               </div>
-              <div className="bg-neutral-100 text-neutral-700 px-3 py-1 rounded-md text-xs font-medium">
+              <div className="bg-neutral-100 text-neutral-700 px-2 md:px-3 py-1 rounded-md text-xs font-medium">
                 NestJS
               </div>
-              <div className="bg-neutral-100 text-neutral-700 px-3 py-1 rounded-md text-xs font-medium">
+              <div className="bg-neutral-100 text-neutral-700 px-2 md:px-3 py-1 rounded-md text-xs font-medium">
                 Prisma
               </div>
             </div>
 
-            {/* Logout Button */}
-            <button
-              onClick={handleLogout}
-              className="flex items-center space-x-2 bg-neutral-600 hover:bg-neutral-700 text-white px-4 py-2 rounded-lg transition-colors"
-            >
-              <LogoutIcon className="w-4 h-4" />
-              <span className="hidden sm:inline font-medium">Выйти</span>
-            </button>
+            {/* Controls Container */}
+            <div className="flex items-center space-x-2 sm:space-x-4 w-full sm:w-auto">
+              {/* Mobile Menu Button */}
+              <button
+                onClick={toggleMobileMenu}
+                className="flex items-center justify-center w-8 h-8 rounded-lg text-black hover:bg-neutral-100 transition-colors"
+                aria-label="Toggle menu"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={isMobileMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"} />
+                </svg>
+              </button>
+ 
+              {/* Desktop Logout Button */}
+              <button
+                onClick={handleLogout}
+                className="hidden sm:flex items-center space-x-2 bg-neutral-600 hover:bg-neutral-700 text-white px-3 py-1.5 rounded-lg transition-colors text-sm"
+              >
+                <LogoutIcon className="w-3 h-3" />
+                <span className="font-medium text-sm">Выйти</span>
+              </button>
+            </div>
           </div>
         </div>
+
       </header>
 
       {/* Navigation */}
       <nav className="bg-white border-b border-neutral-200 sticky top-16 z-40">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex space-x-1 py-4 overflow-x-auto">
-            {[...navigationItems, ...(role === 'hr' ? hrItems : [])].map((item, index) => {
+        <div className="max-w-7xl mx-auto px-2 sm:px-4 md:px-6 lg:px-8 w-full">
+          {/* Desktop Navigation - теперь видна на sm и выше */}
+          <div className="hidden sm:flex flex-wrap gap-1 py-2 sm:py-3 md:py-4 w-full">
+            {[...navigationItems, ...(role === 'hr' ? hrItems : [])].map((item) => {
               const Icon = item.icon;
               return (
                 <Link
                   key={item.href}
                   href={item.href}
-                  className="group flex items-center space-x-2 px-4 py-2 rounded-lg text-neutral-700 hover:text-neutral-900 hover:bg-neutral-50 transition-colors whitespace-nowrap"
+                  className="group flex items-center space-x-2 px-2 sm:px-3 md:px-4 py-1 sm:py-2 md:py-3 rounded-lg text-neutral-700 hover:text-neutral-900 hover:bg-neutral-50 transition-colors text-xs sm:text-sm md:text-base flex-shrink-0"
                 >
-                  <Icon className="w-5 h-5" />
-                  <span className="font-medium">{item.label}</span>
+                  <Icon className="w-3 h-3 sm:w-4 md:w-5 sm:h-4 md:h-5" />
+                  <span className="font-medium text-xs sm:text-sm md:text-base">{item.label}</span>
                 </Link>
               );
             })}
+          </div>
+
+          {/* Mobile Navigation */}
+          <div className={`md:hidden ${isMobileMenuOpen ? 'block' : 'hidden'} bg-white border-b border-neutral-200 shadow-lg`}>
+            <div className="py-2 space-y-1 border-t border-neutral-200 bg-white">
+              {[...navigationItems, ...(role === 'hr' ? hrItems : [])].map((item) => {
+                const Icon = item.icon;
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className="flex items-center space-x-3 px-4 py-3 rounded-lg text-neutral-700 hover:text-neutral-900 hover:bg-neutral-50 transition-colors"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                  >
+                    <Icon className="w-5 h-5 text-neutral-600" />
+                    <div className="flex flex-col">
+                      <span className="font-medium text-sm">{item.label}</span>
+                      <span className="text-xs text-neutral-500">{item.description}</span>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
           </div>
         </div>
       </nav>
 
       {/* Main Content */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="animate-fade-in">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8">
+        <div className="animate-fade-in w-full">
           {children}
         </div>
       </main>
 
       {/* Footer */}
-      <footer className="bg-neutral-50 border-t border-neutral-200 mt-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <footer className="bg-neutral-50 border-t border-neutral-200 mt-12 md:mt-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8">
           <div className="text-center">
             <div className="flex items-center justify-center space-x-2 mb-2">
               <GiftIcon className="w-5 h-5 text-neutral-600" />
-              <span className="text-neutral-700 font-medium">BirthdayFlow</span>
+              <span className="text-neutral-700 font-medium text-base md:text-lg">BirthdayFlow</span>
             </div>
-            <p className="text-neutral-600 text-sm mb-4">
+            <p className="text-neutral-600 text-sm md:text-base mb-4">
               Современная система автоматизации корпоративных поздравлений
             </p>
-            <div className="flex items-center justify-center space-x-4 text-xs text-neutral-500">
+            <div className="flex flex-col sm:flex-row items-center justify-center space-y-2 sm:space-y-0 sm:space-x-4 text-xs md:text-sm text-neutral-500">
               <span>© 2025 BirthdayFlow</span>
-              <span>•</span>
+              <div className="hidden sm:block">•</div>
               <span>Next.js + NestJS + Prisma</span>
-              <span>•</span>
+              <div className="hidden sm:block">•</div>
               <span>Nodemailer</span>
             </div>
           </div>

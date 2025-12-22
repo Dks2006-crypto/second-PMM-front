@@ -7,6 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import api from '@/lib/api';
 import { useRouter, useParams } from 'next/navigation';
 import { getRole } from '@/lib/auth';
+import FileUpload from '@/components/ui/FileUpload';
 
 const schema = z.object({
   firstName: z.string().min(1),
@@ -29,6 +30,7 @@ export default function EditEmployeePage() {
   const [departments, setDepartments] = useState([]);
   const [positions, setPositions] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
 
   const { register, handleSubmit, setValue } = useForm<FormData>({
     resolver: zodResolver(schema),
@@ -65,14 +67,29 @@ export default function EditEmployeePage() {
 
   const onSubmit = async (data: FormData) => {
     try {
-      await api.patch(`/employees/${id}`, {
-        ...data,
+      // Преобразуем дату в формат ISO-8601
+      const birthDate = new Date(data.birthDate);
+      const isoBirthDate = birthDate.toISOString();
+      
+      const payload: any = {
+        firstName: data.firstName,
+        lastName: data.lastName,
+        email: data.email,
+        birthDate: isoBirthDate,
         departmentId: data.departmentId || null,
         positionId: data.positionId || null,
-      });
+      };
+      
+      // Если photoUrl не пустой, добавляем его в payload
+      if (data.photoUrl) {
+        payload.photoUrl = data.photoUrl;
+      }
+      
+      await api.patch(`/employees/${id}`, payload);
       router.push('/dashboard/employees');
-    } catch {
-      alert('Ошибка обновления');
+    } catch (error: any) {
+      console.error('Ошибка обновления:', error);
+      alert('Ошибка обновления: ' + (error.response?.data?.message || error.message || 'Неизвестная ошибка'));
     }
   };
 
@@ -89,34 +106,42 @@ export default function EditEmployeePage() {
   if (loading) return <p className="text-secondary-600">Загрузка...</p>;
 
   return (
-      <div className="max-w-2xl mx-auto">
-        <h1 className="text-3xl mb-6 text-primary-800">Редактировать сотрудника</h1>
-        <form onSubmit={handleSubmit(onSubmit)} className="bg-white p-6 rounded shadow space-y-4">
-          <input {...register('firstName')} placeholder="Имя" className="w-full p-2 border" />
-          <input {...register('lastName')} placeholder="Фамилия" className="w-full p-2 border" />
-          <input {...register('email')} placeholder="Email" className="w-full p-2 border" />
-          <input {...register('birthDate')} type="date" className="w-full p-2 border" />
-          <input {...register('photoUrl')} placeholder="URL фото" className="w-full p-2 border" />
+      <div className="max-w-2xl mx-auto w-full px-2 md:px-0">
+        <h1 className="text-2xl md:text-3xl mb-4 md:mb-6 text-primary-800">Редактировать сотрудника</h1>
+        <form onSubmit={handleSubmit(onSubmit)} className="bg-white p-4 md:p-6 rounded shadow space-y-4">
+          <input {...register('firstName')} placeholder="Имя" className="w-full p-2 md:p-3 border border-gray-300 rounded text-black" />
+          <input {...register('lastName')} placeholder="Фамилия" className="w-full p-2 md:p-3 border border-gray-300 rounded text-black" />
+          <input {...register('email')} placeholder="Email" className="w-full p-2 md:p-3 border border-gray-300 rounded text-black" />
+          <input {...register('birthDate')} type="date" className="w-full p-2 md:p-3 border border-gray-300 rounded text-black" />
+          
+          {/* Компонент загрузки фото */}
+          <div className="space-y-2">
+            <label className="block text-sm font-medium text-gray-700">Фото сотрудника</label>
+            <FileUpload onFileSelect={setSelectedFile} accept="image/*" />
+            {selectedFile && (
+              <p className="text-sm text-gray-600">Выбран: {selectedFile.name}</p>
+            )}
+          </div>
 
-          <select {...register('departmentId', { valueAsNumber: true })} className="w-full p-2 border">
+          <select {...register('departmentId', { valueAsNumber: true })} className="w-full p-2 md:p-3 border border-gray-300 rounded text-black">
             <option value="">Без отдела</option>
             {departments.map((d: any) => (
-              <option key={d.id} value={d.id}>{d.name}</option>
+              <option key={d.id} value={d.id} className="text-black">{d.name}</option>
             ))}
           </select>
 
-          <select {...register('positionId', { valueAsNumber: true })} className="w-full p-2 border">
+          <select {...register('positionId', { valueAsNumber: true })} className="w-full p-2 md:p-3 border border-gray-300 rounded text-black">
             <option value="">Без должности</option>
             {positions.map((p: any) => (
-              <option key={p.id} value={p.id}>{p.name}</option>
+              <option key={p.id} value={p.id} className="text-black">{p.name}</option>
             ))}
           </select>
 
-          <div className="flex gap-4">
-            <button type="submit" className="bg-primary-700 hover:bg-primary-800 text-white py-2 px-6 rounded transition">
+          <div className="flex flex-col sm:flex-row gap-4">
+            <button type="submit" className="bg-primary-700 hover:bg-primary-800 text-white py-2 px-4 md:py-2 md:px-6 rounded transition w-full sm:w-auto">
               Сохранить
             </button>
-            <button type="button" onClick={handleDelete} className="bg-accent-700 hover:bg-accent-800 text-white py-2 px-6 rounded transition">
+            <button type="button" onClick={handleDelete} className="bg-accent-700 hover:bg-accent-800 text-white py-2 px-4 md:py-2 md:px-6 rounded transition w-full sm:w-auto">
               Удалить
             </button>
           </div>

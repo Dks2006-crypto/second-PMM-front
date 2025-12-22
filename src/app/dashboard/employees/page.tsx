@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { format } from 'date-fns';
 import { getRole } from '@/lib/auth';
 import { useRouter } from 'next/navigation';
+import { ResponsiveTable } from '@/components/ui/ResponsiveTable';
 
 interface Employee {
   id: number;
@@ -38,40 +39,80 @@ export default function EmployeesPage() {
 
   return (
       <div>
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-3xl text-primary-800">Сотрудники</h1>
-          <Link href="/dashboard/employees/create" className="bg-primary-700 hover:bg-primary-800 text-white px-4 py-2 rounded transition">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 space-y-4 sm:space-y-0">
+          <h1 className="text-2xl md:text-3xl text-primary-800">Сотрудники</h1>
+          <Link href="/dashboard/employees/create" className="bg-primary-700 hover:bg-primary-800 text-white px-3 py-2 md:px-4 md:py-2 rounded transition text-sm md:text-base w-full sm:w-auto text-center">
             Добавить сотрудника
           </Link>
         </div>
 
         {loading ? <p className="text-secondary-600">Загрузка...</p> : (
-          <table className="w-full border-collapse">
-            <thead>
-              <tr className="bg-secondary-100">
-                <th className="border p-3 text-left text-primary-700">ФИО</th>
-                <th className="border p-3 text-left text-primary-700">Email</th>
-                <th className="border p-3 text-left text-primary-700">ДР</th>
-                <th className="border p-3 text-left text-primary-700">Отдел</th>
-                <th className="border p-3 text-left text-primary-700">Должность</th>
-                <th className="border p-3 text-primary-700">Действия</th>
-              </tr>
-            </thead>
-            <tbody>
-              {employees.map(emp => (
-                <tr key={emp.id}>
-                  <td className="border p-3 text-secondary-700">{emp.firstName} {emp.lastName}</td>
-                  <td className="border p-3 text-secondary-700">{emp.email}</td>
-                  <td className="border p-3 text-secondary-700">{format(new Date(emp.birthDate), 'dd.MM.yyyy')}</td>
-                  <td className="border p-3 text-secondary-700">{emp.department?.name || '-'}</td>
-                  <td className="border p-3 text-secondary-700">{emp.position?.name || '-'}</td>
-                  <td className="border p-3">
-                    <Link href={`/dashboard/employees/${emp.id}`} className="text-primary-600 hover:text-primary-700">Редактировать</Link>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <ResponsiveTable
+            data={employees}
+            columns={[
+              {
+                key: 'fullName',
+                header: 'ФИО',
+                mobileLabel: 'Полное имя',
+                render: (emp) => (
+                  <div className="text-secondary-700 font-medium">
+                    {emp.firstName} {emp.lastName}
+                  </div>
+                )
+              },
+              {
+                key: 'email',
+                header: 'Email',
+                mobileLabel: 'Электронная почта',
+                render: (emp) => (
+                  <div className="text-secondary-700">
+                    {emp.email}
+                  </div>
+                )
+              },
+              {
+                key: 'birthDate',
+                header: 'ДР',
+                mobileLabel: 'Дата рождения',
+                render: (emp) => (
+                  <div className="text-secondary-700">
+                    {format(new Date(emp.birthDate), 'dd.MM.yyyy')}
+                  </div>
+                )
+              },
+              {
+                key: 'department',
+                header: 'Отдел',
+                mobileLabel: 'Отдел',
+                render: (emp) => (
+                  <div className="text-secondary-700">
+                    {emp.department?.name || '-'}
+                  </div>
+                )
+              },
+              {
+                key: 'position',
+                header: 'Должность',
+                mobileLabel: 'Должность',
+                render: (emp) => (
+                  <div className="text-secondary-700">
+                    {emp.position?.name || '-'}
+                  </div>
+                )
+              },
+              {
+                key: 'actions',
+                header: 'Действия',
+                mobileLabel: 'Действия',
+                render: (emp) => (
+                  <Link href={`/dashboard/employees/${emp.id}`} className="text-primary-600 hover:text-primary-700">
+                    Редактировать
+                  </Link>
+                )
+              }
+            ]}
+            emptyMessage="Список сотрудников пуст"
+          />
         )}
       </div>
   );

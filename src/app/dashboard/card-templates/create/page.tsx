@@ -84,7 +84,7 @@ export default function CreateCardTemplatePage() {
       <form onSubmit={handleSubmit(onSubmit)} className="bg-white p-6 rounded-2xl shadow-soft space-y-6">
         <div>
           <label className="block text-sm font-medium mb-2 text-primary-700">Название</label>
-          <input {...register('name')} placeholder="Название" className="w-full p-3 border border-primary-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent" />
+          <input {...register('name')} placeholder="Название" className="w-full p-3 border border-primary-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent text-black" />
         </div>
         
         <div className="space-y-4">
@@ -101,7 +101,7 @@ export default function CreateCardTemplatePage() {
           {!noBackground && (
             <div>
               <label className="block text-sm font-medium mb-2 text-primary-700">URL фонового изображения</label>
-              <input {...register('backgroundImageUrl')} placeholder="https://..." className="w-full p-3 border border-primary-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent" />
+              <input {...register('backgroundImageUrl')} placeholder="https://..." className="w-full p-3 border border-primary-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent text-black" />
               {errors.backgroundImageUrl && (
                 <p className="text-red-500 text-sm mt-1">{errors.backgroundImageUrl.message}</p>
               )}
@@ -111,28 +111,28 @@ export default function CreateCardTemplatePage() {
         
         <div>
           <label className="block text-sm font-medium mb-2 text-primary-700">Текст поздравления</label>
-          <textarea {...register('textTemplate')} placeholder="Используйте {name} для имени именинника" rows={4} className="w-full p-3 border border-primary-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent" />
+          <textarea {...register('textTemplate')} placeholder="Используйте {name} для имени именинника" rows={4} className="w-full p-3 border border-primary-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent text-black" />
         </div>
         
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium mb-2 text-primary-700">Размер шрифта</label>
-            <input {...register('fontSize', { valueAsNumber: true })} type="number" placeholder="48" className="w-full p-3 border border-primary-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent" />
+            <input {...register('fontSize', { valueAsNumber: true })} type="number" placeholder="48" className="w-full p-3 border border-primary-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent text-black" />
           </div>
           <div>
             <label className="block text-sm font-medium mb-2 text-primary-700">Цвет шрифта</label>
-            <input {...register('fontColor')} placeholder="#FFFFFF" className="w-full p-3 border border-primary-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent" />
+            <input {...register('fontColor')} placeholder="#FFFFFF" className="w-full p-3 border border-primary-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent text-black" />
           </div>
         </div>
         
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="block text-sm font-medium mb-2 text-primary-700">X позиция текста</label>
-            <input {...register('textX', { valueAsNumber: true })} type="number" placeholder="100" className="w-full p-3 border border-primary-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent" />
+            <input {...register('textX', { valueAsNumber: true })} type="number" placeholder="100" className="w-full p-3 border border-primary-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent text-black" />
           </div>
           <div>
             <label className="block text-sm font-medium mb-2 text-primary-700">Y позиция текста</label>
-            <input {...register('textY', { valueAsNumber: true })} type="number" placeholder="200" className="w-full p-3 border border-primary-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent" />
+            <input {...register('textY', { valueAsNumber: true })} type="number" placeholder="200" className="w-full p-3 border border-primary-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent text-black" />
           </div>
         </div>
 
@@ -140,7 +140,7 @@ export default function CreateCardTemplatePage() {
           <label className="block text-sm font-medium mb-2 text-primary-700">Отдел (опционально)</label>
           <select
             onChange={(e) => setValue('departmentId', e.target.value ? Number(e.target.value) : undefined)}
-            className="w-full p-3 border border-primary-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+            className="w-full p-3 border border-primary-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent text-black"
           >
             <option value="">Без отдела</option>
             {departments.map((d: any) => (
@@ -153,7 +153,7 @@ export default function CreateCardTemplatePage() {
           <label className="block text-sm font-medium mb-2 text-primary-700">Должность (опционально)</label>
           <select
             onChange={(e) => setValue('positionId', e.target.value ? Number(e.target.value) : undefined)}
-            className="w-full p-3 border border-primary-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+            className="w-full p-3 border border-primary-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent text-black"
           >
             <option value="">Без должности</option>
             {positions.map((p: any) => (

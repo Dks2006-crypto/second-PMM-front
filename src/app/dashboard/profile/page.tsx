@@ -50,8 +50,6 @@ export default function ProfilePage() {
   const [notificationSettings, setNotificationSettings] = useState({
     receiveEmail: true,
     receiveInApp: true,
-    reminderDaysBefore: 7,
-    sendTime: '09:00',
     showBirthdayPublic: true,
     allowCardPersonalization: true,
   });
@@ -80,8 +78,6 @@ export default function ProfilePage() {
       setNotificationSettings({
         receiveEmail: data.preferences?.receiveEmail ?? true,
         receiveInApp: data.preferences?.receiveInApp ?? true,
-        reminderDaysBefore: data.preferences?.reminderDaysBefore ?? 7,
-        sendTime: data.preferences?.sendTime ?? '09:00',
         showBirthdayPublic: data.preferences?.showBirthdayPublic ?? true,
         allowCardPersonalization: data.preferences?.allowCardPersonalization ?? true,
       });
@@ -222,29 +218,29 @@ export default function ProfilePage() {
   if (!profile) return null;
 
   return (
-    <div className="max-w-4xl mx-auto space-y-8">
+    <div className="max-w-4xl mx-auto space-y-6 md:space-y-8 px-2 md:px-0">
       {/* Заголовок */}
       <div>
-        <h1 className="text-3xl mb-6 text-neutral-800">Мой профиль</h1>
+        <h1 className="text-2xl md:text-3xl mb-4 md:mb-6 text-neutral-800">Мой профиль</h1>
         
         {/* Сообщения */}
         {message && (
-          <div className={`p-4 rounded mb-4 ${
+          <div className={`p-3 md:p-4 rounded mb-4 ${
             message.type === 'success' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
           }`}>
-            {message.text}
+            <p className="text-sm md:text-base">{message.text}</p>
           </div>
         )}
       </div>
 
       {/* Основная информация */}
-      <div className="bg-white p-6 rounded-lg shadow">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-semibold text-neutral-800">Основная информация</h2>
+      <div className="bg-white p-4 md:p-6 rounded-lg shadow">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 md:mb-6 space-y-4 sm:space-y-0">
+          <h2 className="text-xl md:text-2xl font-semibold text-neutral-800">Основная информация</h2>
           {!editing && (
             <button
               onClick={() => setEditing(true)}
-              className="bg-primary-600 text-white px-4 py-2 rounded hover:bg-primary-700"
+              className="bg-primary-600 text-white px-3 py-2 md:px-4 md:py-2 rounded hover:bg-primary-700 transition-colors w-full sm:w-auto text-sm md:text-base"
             >
               Редактировать
             </button>
@@ -253,14 +249,14 @@ export default function ProfilePage() {
 
         {editing ? (
           <form onSubmit={handleProfileUpdate} className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
               <div>
                 <label className="block text-sm font-medium mb-2 text-neutral-700">Имя</label>
                 <input
                   type="text"
                   value={profileForm.firstName}
                   onChange={(e) => setProfileForm(prev => ({ ...prev, firstName: e.target.value }))}
-                  className="w-full p-2 border rounded"
+                  className="w-full p-2 md:p-3 border border-gray-300 rounded text-black text-sm md:text-base"
                   required
                 />
               </div>
@@ -270,7 +266,7 @@ export default function ProfilePage() {
                   type="text"
                   value={profileForm.lastName}
                   onChange={(e) => setProfileForm(prev => ({ ...prev, lastName: e.target.value }))}
-                  className="w-full p-2 border rounded"
+                  className="w-full p-2 md:p-3 border border-gray-300 rounded text-black text-sm md:text-base"
                   required
                 />
               </div>
@@ -285,7 +281,7 @@ export default function ProfilePage() {
                   type="date"
                   value={profileForm.birthDate}
                   onChange={(e) => setProfileForm(prev => ({ ...prev, birthDate: e.target.value }))}
-                  className={`w-full p-2 border rounded ${
+                  className={`w-full p-2 md:p-3 border border-gray-300 rounded text-black text-sm md:text-base ${
                     userRole !== 'hr' ? 'bg-secondary-50 cursor-not-allowed' : ''
                   }`}
                   required={userRole === 'hr'}
@@ -294,11 +290,11 @@ export default function ProfilePage() {
               </div>
             </div>
             
-            <div className="flex space-x-4">
+            <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
               <button
                 type="submit"
                 disabled={saving}
-                className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 disabled:opacity-50"
+                className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 disabled:opacity-50 transition-colors w-full sm:w-auto text-sm md:text-base"
               >
                 {saving ? 'Сохранение...' : 'Сохранить'}
               </button>
@@ -312,21 +308,21 @@ export default function ProfilePage() {
                     birthDate: profile.birthDate ? profile.birthDate.split('T')[0] : '',
                   });
                 }}
-                className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600"
+                className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition-colors w-full sm:w-auto text-sm md:text-base"
               >
                 Отмена
               </button>
             </div>
           </form>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="flex items-center space-x-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
+            <div className="flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4">
               {profile.photoUrl && profile.photoUrl.trim() ? (
                 <div className="relative">
-                  <img 
-                    src={profile.photoUrl.trim()} 
-                    alt="Фото" 
-                    className="w-24 h-24 rounded-full object-cover" 
+                  <img
+                    src={profile.photoUrl.trim()}
+                    alt="Фото"
+                    className="w-20 h-20 md:w-24 md:h-24 rounded-full object-cover"
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
                       target.style.display = 'none';
@@ -335,11 +331,11 @@ export default function ProfilePage() {
                   <div className="absolute -bottom-2 -right-2 flex space-x-1">
                     <button
                       onClick={() => document.getElementById('photo-upload')?.click()}
-                      className="bg-blue-600 text-white p-2 rounded-full hover:bg-blue-700 transition-colors"
+                      className="bg-blue-600 text-white p-1.5 md:p-2 rounded-full hover:bg-blue-700 transition-colors"
                       disabled={uploadingPhoto}
                       title="Изменить фото"
                     >
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <svg className="w-3 h-3 md:w-4 md:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
                       </svg>
                     </button>
@@ -355,22 +351,22 @@ export default function ProfilePage() {
                 </div>
               ) : (
                 <div className="relative">
-                  <div className="w-24 h-24 bg-gray-300 rounded-full flex items-center justify-center text-2xl font-bold text-gray-600">
+                  <div className="w-20 h-20 md:w-24 md:h-24 bg-gray-300 rounded-full flex items-center justify-center text-xl md:text-2xl font-bold text-gray-600">
                     {profile.firstName?.[0]}{profile.lastName?.[0]}
                   </div>
                   <button
                     onClick={() => document.getElementById('photo-upload')?.click()}
-                    className="absolute -bottom-2 -right-2 bg-green-600 text-white p-2 rounded-full hover:bg-green-700 transition-colors"
+                    className="absolute -bottom-2 -right-2 bg-green-600 text-white p-1.5 md:p-2 rounded-full hover:bg-green-700 transition-colors"
                     disabled={uploadingPhoto}
                     title="Загрузить фото"
                   >
                     {uploadingPhoto ? (
-                      <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                      <svg className="w-3 h-3 md:w-4 md:h-4 animate-spin" fill="none" viewBox="0 0 24 24">
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                       </svg>
                     ) : (
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <svg className="w-3 h-3 md:w-4 md:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
                       </svg>
                     )}
@@ -384,16 +380,16 @@ export default function ProfilePage() {
                 onChange={handlePhotoUpload}
                 className="hidden"
               />
-              <div>
-                <h3 className="text-xl font-semibold text-primary-900">{profile.firstName} {profile.lastName}</h3>
-                <p className="text-primary-700">{profile.email}</p>
+              <div className="text-center sm:text-left">
+                <h3 className="text-lg md:text-xl font-semibold text-primary-900">{profile.firstName} {profile.lastName}</h3>
+                <p className="text-sm md:text-base text-primary-700">{profile.email}</p>
               </div>
             </div>
             
             <div className="space-y-2">
-              <p className="text-primary-900"><strong>Дата рождения:</strong> {format(new Date(profile.birthDate), 'dd.MM.yyyy')}</p>
-              <p className="text-primary-900"><strong>Отдел:</strong> {profile.department?.name || 'Не указан'}</p>
-              <p className="text-primary-900"><strong>Должность:</strong> {profile.position?.name || 'Не указана'}</p>
+              <p className="text-sm md:text-base text-primary-900"><strong>Дата рождения:</strong> {format(new Date(profile.birthDate), 'dd.MM.yyyy')}</p>
+              <p className="text-sm md:text-base text-primary-900"><strong>Отдел:</strong> {profile.department?.name || 'Не указан'}</p>
+              <p className="text-sm md:text-base text-primary-900"><strong>Должность:</strong> {profile.position?.name || 'Не указана'}</p>
             </div>
           </div>
         )}
@@ -438,37 +434,6 @@ export default function ProfilePage() {
                   />
                   <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-600"></div>
                 </label>
-              </div>
-            </div>
-          </div>
-
-          {/* Настройки времени */}
-          <div>
-            <h3 className="text-lg font-medium mb-4 text-neutral-700">Настройки времени</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-sm font-medium mb-2 text-neutral-700">Напоминать за (дней)</label>
-                <select
-                  value={notificationSettings.reminderDaysBefore}
-                  onChange={(e) => handleNotificationToggle('reminderDaysBefore', parseInt(e.target.value))}
-                  className="w-full p-2 border rounded focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                >
-                  <option value={1}>1 день</option>
-                  <option value={3}>3 дня</option>
-                  <option value={7}>7 дней</option>
-                  <option value={14}>14 дней</option>
-                  <option value={30}>30 дней</option>
-                </select>
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium mb-2 text-neutral-700">Время отправки</label>
-                <input
-                  type="time"
-                  value={notificationSettings.sendTime}
-                  onChange={(e) => handleNotificationToggle('sendTime', e.target.value)}
-                  className="w-full p-2 border rounded focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                />
               </div>
             </div>
           </div>
@@ -523,7 +488,7 @@ export default function ProfilePage() {
               type="password"
               value={passwordForm.currentPassword}
               onChange={(e) => setPasswordForm(prev => ({ ...prev, currentPassword: e.target.value }))}
-              className="w-full p-2 border rounded"
+              className="w-full p-2 border rounded text-black"
               required
             />
           </div>
@@ -534,7 +499,7 @@ export default function ProfilePage() {
                 type="password"
                 value={passwordForm.newPassword}
                 onChange={(e) => setPasswordForm(prev => ({ ...prev, newPassword: e.target.value }))}
-                className="w-full p-2 border rounded"
+                className="w-full p-2 border rounded text-black"
                 required
                 minLength={6}
               />
@@ -545,7 +510,7 @@ export default function ProfilePage() {
                 type="password"
                 value={passwordForm.confirmPassword}
                 onChange={(e) => setPasswordForm(prev => ({ ...prev, confirmPassword: e.target.value }))}
-                className="w-full p-2 border rounded"
+                className="w-full p-2 border rounded text-black"
                 required
                 minLength={6}
               />

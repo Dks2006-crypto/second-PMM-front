@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import api from '@/lib/api';
 import { format } from 'date-fns';
+import { ResponsiveTable } from '@/components/ui/ResponsiveTable';
 
 interface Colleague {
   id: number;
@@ -117,21 +118,6 @@ export default function ColleaguesPage() {
     return daysA - daysB;
   });
 
-  const getRowStyle = (birthDate: string) => {
-    const daysUntil = getDaysUntilBirthday(birthDate);
-    const birth = new Date(birthDate);
-    const today = new Date();
-    const birthdayThisYear = new Date(today.getFullYear(), birth.getMonth(), birth.getDate());
-    const isToday = birthdayThisYear.toDateString() === today.toDateString();
-    
-    if (isToday) {
-      return 'bg-accent-100 border-l-4 border-accent-500';
-    } else if (daysUntil <= 7) {
-      return 'bg-primary-50 border-l-4 border-primary-400';
-    } else {
-      return 'bg-white border-b border-gray-800';
-    }
-  };
 
   const getBirthdayBadge = (birthDate: string) => {
     const daysUntil = getDaysUntilBirthday(birthDate);
@@ -188,14 +174,14 @@ export default function ColleaguesPage() {
       <div className="bg-white p-6 rounded-lg shadow mb-6">
         <h2 className="text-lg font-semibold text-primary-800 mb-4">Фильтры</h2>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2 md:gap-4 mb-4">
           {/* Фильтр по отделу */}
           <div>
-            <label className="block text-sm font-medium mb-2 text-black">Отдел</label>
+            <label className="block text-sm font-medium mb-1 md:mb-2 text-black">Отдел</label>
             <select
               value={filters.departmentId}
               onChange={(e) => handleFilterChange('departmentId', e.target.value)}
-              className="w-full p-2 border border-primary-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+              className="w-full p-2 text-sm md:text-base border text-black border-primary-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
             >
               <option value="">Все отделы</option>
               {departments.map(dept => (
@@ -203,14 +189,14 @@ export default function ColleaguesPage() {
               ))}
             </select>
           </div>
-
+ 
           {/* Быстрые фильтры по периоду */}
           <div>
-            <label className="block text-sm font-medium mb-2 text-black">Период</label>
+            <label className="block text-sm font-medium mb-1 md:mb-2 text-black">Период</label>
             <select
               value={filters.period}
               onChange={(e) => handleFilterChange('period', e.target.value)}
-              className="w-full p-2 border border-primary-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+              className="w-full p-2 text-sm md:text-base text-black border border-primary-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
             >
               <option value="all">Все дни рождения</option>
               <option value="today">Сегодня</option>
@@ -218,26 +204,26 @@ export default function ColleaguesPage() {
               <option value="month">В этом месяце</option>
             </select>
           </div>
-
+ 
           {/* Фильтр по дате "с" */}
           <div>
-            <label className="block text-sm font-medium mb-2 text-black">Дата "с"</label>
+            <label className="block text-sm font-medium mb-1 md:mb-2 text-black">Дата "с"</label>
             <input
               type="date"
               value={filters.dateFrom}
               onChange={(e) => handleFilterChange('dateFrom', e.target.value)}
-              className="w-full p-2 border border-primary-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+              className="w-full p-2 text-sm md:text-base text-black border border-primary-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
             />
           </div>
-
+ 
           {/* Фильтр по дате "по" */}
           <div>
-            <label className="block text-sm font-medium mb-2 text-black">Дата "по"</label>
+            <label className="block text-sm font-medium mb-1 md:mb-2 text-black">Дата "по"</label>
             <input
               type="date"
               value={filters.dateTo}
               onChange={(e) => handleFilterChange('dateTo', e.target.value)}
-              className="w-full p-2 border border-primary-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+              className="w-full p-2 text-sm md:text-base border text-black border-primary-200 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
             />
           </div>
         </div>
@@ -296,74 +282,88 @@ export default function ColleaguesPage() {
             </p>
           </div>
           
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-800">
-              <thead className="bg-gray-100">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-black uppercase tracking-wider">
-                    ФИО
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-black uppercase tracking-wider">
-                    Отдел
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-black uppercase tracking-wider">
-                    Дата рождения
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-black uppercase tracking-wider">
-                    В этом году
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-black uppercase tracking-wider">
-                    До дня рождения
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-black uppercase tracking-wider">
-                    Статус
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-800">
-                {sortedColleagues.map((colleague) => {
+          <ResponsiveTable
+            data={sortedColleagues}
+            columns={[
+              {
+                key: 'fullName',
+                header: 'ФИО',
+                mobileLabel: 'Полное имя',
+                render: (colleague) => (
+                  <div className="text-sm font-medium text-primary-900">
+                    {colleague.firstName} {colleague.lastName}
+                  </div>
+                )
+              },
+              {
+                key: 'department',
+                header: 'Отдел',
+                render: (colleague) => (
+                  <div className="text-sm text-black">
+                    {colleague.department?.name || 'Не указан'}
+                  </div>
+                )
+              },
+              {
+                key: 'birthDate',
+                header: 'Дата рождения',
+                mobileLabel: 'Дата рождения',
+                render: (colleague) => {
                   const birth = new Date(colleague.birthDate);
-                  const daysUntil = getDaysUntilBirthday(colleague.birthDate);
-                  const nextBirthday = getNextBirthdayDate(colleague.birthDate);
+                  return <div className="text-sm text-black">{format(birth, 'dd.MM.yyyy')}</div>;
+                }
+              },
+              {
+                key: 'birthdayThisYear',
+                header: 'В этом году',
+                mobileLabel: 'День рождения в этом году',
+                render: (colleague) => {
+                  const birth = new Date(colleague.birthDate);
                   const birthdayThisYear = new Date(new Date().getFullYear(), birth.getMonth(), birth.getDate());
-                  const isToday = birthdayThisYear.toDateString() === new Date().toDateString();
-
+                  return <div className="text-sm text-black">{format(birthdayThisYear, 'dd.MM')}</div>;
+                }
+              },
+              {
+                key: 'daysUntil',
+                header: 'До дня рождения',
+                mobileLabel: 'Осталось дней',
+                render: (colleague) => {
+                  const daysUntil = getDaysUntilBirthday(colleague.birthDate);
+                  const birth = new Date(colleague.birthDate);
+                  const today = new Date();
+                  const birthdayThisYear = new Date(today.getFullYear(), birth.getMonth(), birth.getDate());
+                  const isToday = birthdayThisYear.toDateString() === today.toDateString();
                   return (
-                    <tr key={colleague.id} className={getRowStyle(colleague.birthDate)}>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm font-medium text-primary-900">
-                          {colleague.firstName} {colleague.lastName}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-black">
-                          {colleague.department?.name || 'Не указан'}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-black">
-                          {format(birth, 'dd.MM.yyyy')}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-black">
-                          {format(birthdayThisYear, 'dd.MM')}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="text-sm text-black">
-                          {isToday ? 'Сегодня!' : `${daysUntil} ${daysUntil === 1 ? 'день' : daysUntil < 5 ? 'дня' : 'дней'}`}
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        {getBirthdayBadge(colleague.birthDate)}
-                      </td>
-                    </tr>
+                    <div className="text-sm text-black">
+                      {isToday ? 'Сегодня!' : `${daysUntil} ${daysUntil === 1 ? 'день' : daysUntil < 5 ? 'дня' : 'дней'}`}
+                    </div>
                   );
-                })}
-              </tbody>
-            </table>
-          </div>
+                }
+              },
+              {
+                key: 'status',
+                header: 'Статус',
+                mobileLabel: 'Статус дня рождения',
+                render: (colleague) => getBirthdayBadge(colleague.birthDate)
+              }
+           ]}
+           getRowStyle={(colleague) => {
+             const daysUntil = getDaysUntilBirthday(colleague.birthDate);
+             const birth = new Date(colleague.birthDate);
+             const today = new Date();
+             const birthdayThisYear = new Date(today.getFullYear(), birth.getMonth(), birth.getDate());
+             const isToday = birthdayThisYear.toDateString() === today.toDateString();
+             
+             if (isToday) {
+               return 'bg-accent-100 border-l-4 border-accent-500';
+             } else if (daysUntil <= 7) {
+               return 'bg-primary-50 border-l-4 border-primary-400';
+             } else {
+               return 'bg-white border-b border-gray-800';
+             }
+           }}
+           emptyMessage={hasActiveFilters ? 'Нет сотрудников, соответствующих выбранным фильтрам' : 'Список коллег пуст'}
+         />
         </div>
       )}
 
