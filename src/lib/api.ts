@@ -13,4 +13,70 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
+// API для работы с профилем
+export const profileApi = {
+  // Получение профиля
+  getProfile: () => api.get('/employees/me/profile'),
+
+  // Обновление профиля
+  updateProfile: (data: {
+    firstName?: string;
+    lastName?: string;
+    birthDate?: string;
+    photoUrl?: string;
+    receiveEmail?: boolean;
+    receiveInApp?: boolean;
+    reminderDaysBefore?: number;
+    sendTime?: string;
+    showBirthdayPublic?: boolean;
+    allowCardPersonalization?: boolean;
+    currentPassword?: string;
+    newPassword?: string;
+  }) => api.patch('/employees/me/profile', data),
+
+  // Получение настроек уведомлений
+  getNotificationSettings: () => api.get('/employees/me/notification-settings'),
+
+  // Обновление настроек уведомлений
+  updateNotificationSettings: (receiveEmail: boolean) =>
+    api.patch('/employees/me/notification-settings', { receiveEmail }),
+
+  // Смена пароля
+  changePassword: (currentPassword: string, newPassword: string) =>
+    api.post('/employees/me/change-password', { currentPassword, newPassword }),
+
+  // Загрузка фото профиля
+  uploadPhoto: (photoFile: File) => {
+    const formData = new FormData();
+    formData.append('photo', photoFile);
+    return api.post('/employees/me/photo', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+  },
+
+  // Удаление фото профиля
+  deletePhoto: () => api.delete('/employees/me/photo'),
+
+  // Создание пользователя и сотрудника вместе (только HR)
+  createUserAndEmployee: (data: {
+    email: string;
+    password: string;
+    role: 'employee' | 'hr';
+    firstName: string;
+    lastName: string;
+    birthDate: string;
+    photoUrl?: string;
+    departmentId?: number;
+    positionId?: number;
+  }) => api.post('/employees/create-with-user', data),
+
+  // Получение отделов
+  getDepartments: () => api.get('/departments'),
+
+  // Получение должностей
+  getPositions: () => api.get('/positions'),
+};
+
 export default api;

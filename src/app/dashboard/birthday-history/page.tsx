@@ -31,20 +31,14 @@ export default function BirthdayHistoryPage() {
     api.get('/employees/birthday-history')
       .then(res => setHistory(res.data))
       .catch(err => {
-  console.error('Ошибка при загрузке истории:', err);
-  // Лучше логировать err полностью
-
-  if (err.response?.status === 403) {
-    alert('Доступ запрещён — требуется роль HR');
-    router.push('/dashboard');
-  } else if (err.response?.status === 401) {
-    alert('Сессия истекла');
-    logout();
-    router.push('/login');
-  } else {
-    alert('Ошибка загрузки истории: ' + (err.response?.data?.message || err.message || 'Неизвестная ошибка'));
-  }
-})
+        console.error('Ошибка при загрузке истории:', err);
+        if (err.response?.status === 403 || err.response?.status === 401) {
+          alert('Доступ запрещён или сессия истекла');
+          router.push('/login');
+        } else {
+          alert('Ошибка загрузки истории: ' + (err.response?.data?.message || err.message));
+        }
+      })
       .finally(() => setLoading(false));
   }, [router]);
 

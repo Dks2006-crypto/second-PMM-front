@@ -10,7 +10,7 @@ import { getRole } from '@/lib/auth';
 
 const schema = z.object({
   name: z.string().min(1),
-  backgroundImageUrl: z.string().url(),
+  backgroundImageUrl: z.string().url().optional().or(z.literal('')),
   textTemplate: z.string().min(1),
   fontSize: z.number().min(10),
   fontColor: z.string().regex(/^#/),
@@ -37,6 +37,7 @@ export default function CreateCardTemplatePage() {
   const [departments, setDepartments] = useState([]);
   const [positions, setPositions] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [noBackground, setNoBackground] = useState(false);
 
   
     useEffect(() => {
@@ -61,6 +62,7 @@ export default function CreateCardTemplatePage() {
     try {
       await api.post('/card-templates', {
         ...data,
+        backgroundImageUrl: noBackground ? null : (data.backgroundImageUrl || null),
         departmentId: data.departmentId || null,
         positionId: data.positionId || null,
       });
@@ -70,12 +72,40 @@ export default function CreateCardTemplatePage() {
     }
   };
 
+  const handleNoBackgroundChange = (checked: boolean) => {
+    setNoBackground(checked);
+    if (checked) {
+      setValue('backgroundImageUrl', '');
+    }
+  };
+
   return (
       <div className="max-w-2xl mx-auto">
         <h1 className="text-3xl mb-6 text-primary-800">Создать шаблон открытки</h1>
         <form onSubmit={handleSubmit(onSubmit)} className="bg-white p-6 rounded shadow space-y-4">
           <input {...register('name')} placeholder="Название" className="w-full p-2 border" />
-          <input {...register('backgroundImageUrl')} placeholder="URL фонового изображения" className="w-full p-2 border" />
+          
+          <div className="space-y-2">
+            <label className="flex items-center space-x-2">
+              <input 
+                type="checkbox" 
+                checked={noBackground}
+                onChange={(e) => handleNoBackgroundChange(e.target.checked)}
+                className="rounded"
+              />
+              <span className="text-sm">Без фонового изображения (белый фон)</span>
+            </label>
+            
+            {!noBackground && (
+              <>
+                <input {...register('backgroundImageUrl')} placeholder="URL фонового изображения" className="w-full p-2 border" />
+                {errors.backgroundImageUrl && (
+                  <p className="text-red-500 text-sm">{errors.backgroundImageUrl.message}</p>
+                )}
+              </>
+            )}
+          </div>
+          
           <textarea {...register('textTemplate')} placeholder="Текст (используйте {name} для имени)" rows={4} className="w-full p-2 border" />
           <input {...register('fontSize', { valueAsNumber: true })} type="number" placeholder="Размер шрифта" className="w-full p-2 border" />
           <input {...register('fontColor')} placeholder="Цвет шрифта (#FFFFFF)" className="w-full p-2 border" />

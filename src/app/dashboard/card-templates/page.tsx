@@ -51,7 +51,6 @@ export default function CardTemplatesPage() {
   };
 
   return (
-
       <div>
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-3xl text-primary-800">Шаблоны открыток</h1>
@@ -64,11 +63,17 @@ export default function CardTemplatesPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {templates.map(template => (
               <div key={template.id} className="bg-white p-4 rounded shadow">
-                <img
-                  src={template.backgroundImageUrl}
-                  alt={template.name}
-                  className="w-full h-64 object-cover rounded mb-4"
-                />
+                {template.backgroundImageUrl && template.backgroundImageUrl.trim() ? (
+                  <img
+                    src={template.backgroundImageUrl.trim()}
+                    alt={template.name}
+                    className="w-full h-64 object-cover rounded mb-4"
+                  />
+                ) : (
+                  <div className="w-full h-64 bg-gray-200 rounded mb-4 flex items-center justify-center">
+                    <span className="text-gray-500">Без фонового изображения</span>
+                  </div>
+                )}
                 <h3 className="text-xl font-bold mb-2 text-primary-800">{template.name}</h3>
                 <p className="text-sm text-secondary-700 mb-2">Текст: {template.textTemplate}</p>
                 <p className="text-sm text-secondary-700">Шрифт: {template.fontSize}px {template.fontColor}</p>

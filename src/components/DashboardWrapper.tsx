@@ -32,16 +32,21 @@ export default function DashboardWrapper({ children }: { children: React.ReactNo
             <Link href="/dashboard" className="text-primary-700 hover:text-primary-900 font-medium">
               Календарь ДР
             </Link>
-            <Link href="/dashboard/profile" className="text-primary-700 hover:text-primary-900 font-medium">
-              Мой профиль
+            <Link href="/dashboard/colleagues" className="text-primary-700 hover:text-primary-900 font-medium">
+              Коллеги
             </Link>
+            {role !== 'hr' && (
+              <Link href="/dashboard/profile" className="text-primary-700 hover:text-primary-900 font-medium">
+                Мой профиль
+              </Link>
+            )}
 
             {role === 'hr' && (
               <>
                 <Link href="/dashboard/employees" className="text-primary-700 hover:text-primary-900 font-medium">
                   Сотрудники
                 </Link>
-                <Link href="/dashboard/card-template" className="text-primary-700 hover:text-primary-900 font-medium">
+                <Link href="/dashboard/card-templates" className="text-primary-700 hover:text-primary-900 font-medium">
                   Шаблоны открыток
                 </Link>
                 <Link href="/dashboard/settings" className="text-primary-700 hover:text-primary-900 font-medium">
