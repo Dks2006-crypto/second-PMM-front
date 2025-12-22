@@ -132,8 +132,8 @@ export default function CreateEmployeePage() {
   return (
     <div className="max-w-4xl mx-auto">
       <div className="mb-6">
-        <h1 className="text-3xl text-primary-800">Создание нового сотрудника</h1>
-        <p className="text-secondary-600 mt-2">Создание пользователя в системе и профиля сотрудника</p>
+        <h1 className="text-3xl text-neutral-800">Создание нового сотрудника</h1>
+        <p className="text-neutral-600 mt-2">Создание пользователя в системе и профиля сотрудника</p>
       </div>
 
       {/* Сообщения */}
@@ -148,11 +148,11 @@ export default function CreateEmployeePage() {
       <form onSubmit={handleSubmit} className="space-y-8">
         {/* Информация о пользователе */}
         <div className="bg-white p-6 rounded-lg shadow">
-          <h2 className="text-2xl font-semibold mb-4 text-primary-700">Информация о пользователе</h2>
+          <h2 className="text-2xl font-semibold mb-4 text-neutral-800">Информация о пользователе</h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="md:col-span-2">
-              <label className="block text-sm font-medium mb-2">
+              <label className="block text-sm font-medium mb-2 text-primary-700">
                 Email <span className="text-red-500">*</span>
               </label>
               <input
@@ -167,7 +167,7 @@ export default function CreateEmployeePage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-2">
+              <label className="block text-sm font-medium mb-2 text-primary-700">
                 Пароль <span className="text-red-500">*</span>
               </label>
               <input
@@ -183,7 +183,7 @@ export default function CreateEmployeePage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-2">
+              <label className="block text-sm font-medium mb-2 text-primary-700">
                 Подтвердите пароль <span className="text-red-500">*</span>
               </label>
               <input
@@ -199,7 +199,7 @@ export default function CreateEmployeePage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-2">
+              <label className="block text-sm font-medium mb-2 text-primary-700">
                 Роль <span className="text-red-500">*</span>
               </label>
               <select
@@ -218,11 +218,11 @@ export default function CreateEmployeePage() {
 
         {/* Информация о сотруднике */}
         <div className="bg-white p-6 rounded-lg shadow">
-          <h2 className="text-2xl font-semibold mb-4 text-primary-700">Информация о сотруднике</h2>
+          <h2 className="text-2xl font-semibold mb-4 text-neutral-800">Информация о сотруднике</h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium mb-2">
+              <label className="block text-sm font-medium mb-2 text-primary-700">
                 Имя <span className="text-red-500">*</span>
               </label>
               <input
@@ -237,7 +237,7 @@ export default function CreateEmployeePage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-2">
+              <label className="block text-sm font-medium mb-2 text-primary-700">
                 Фамилия <span className="text-red-500">*</span>
               </label>
               <input
@@ -252,7 +252,7 @@ export default function CreateEmployeePage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-2">
+              <label className="block text-sm font-medium mb-2 text-primary-700">
                 Дата рождения <span className="text-red-500">*</span>
               </label>
               <input
@@ -280,7 +280,7 @@ export default function CreateEmployeePage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-2">Отдел</label>
+              <label className="block text-sm font-medium mb-2 text-primary-700">Отдел</label>
               <select
                 name="departmentId"
                 value={formData.departmentId}
@@ -297,7 +297,7 @@ export default function CreateEmployeePage() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-2">Должность</label>
+              <label className="block text-sm font-medium mb-2 text-primary-700">Должность</label>
               <select
                 name="positionId"
                 value={formData.positionId}

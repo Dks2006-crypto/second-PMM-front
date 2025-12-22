@@ -5,6 +5,7 @@ import api from '@/lib/api';
 import Link from 'next/link';
 import { getRole } from '@/lib/auth';
 import { useRouter } from 'next/navigation';
+import SafeImage from '@/components/SafeImage';
 
 interface CardTemplate {
   id: number;
@@ -64,10 +65,11 @@ export default function CardTemplatesPage() {
             {templates.map(template => (
               <div key={template.id} className="bg-white p-4 rounded shadow">
                 {template.backgroundImageUrl && template.backgroundImageUrl.trim() ? (
-                  <img
+                  <SafeImage
                     src={template.backgroundImageUrl.trim()}
                     alt={template.name}
                     className="w-full h-64 object-cover rounded mb-4"
+                    fallbackText="Фоновое изображение недоступно"
                   />
                 ) : (
                   <div className="w-full h-64 bg-gray-200 rounded mb-4 flex items-center justify-center">

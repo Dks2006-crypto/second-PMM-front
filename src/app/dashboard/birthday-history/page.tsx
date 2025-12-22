@@ -5,6 +5,7 @@ import api from '@/lib/api';
 import { format } from 'date-fns';
 import { useRouter } from 'next/navigation';
 import { getRole, logout } from '@/lib/auth';
+import SafeImage from '@/components/SafeImage';
 
 interface HistoryItem {
   id: number;
@@ -84,9 +85,12 @@ export default function BirthdayHistoryPage() {
                   <td className="border p-3 text-secondary-700">{item.success ? 'Успех' : 'Ошибка'}</td>
                   <td className="border p-3">
                     {item.success && item.imageUrl ? (
-                      <a href={item.imageUrl} target="_blank" className="text-primary-600 hover:text-primary-700">
+                      <button 
+                        onClick={() => window.open(item.imageUrl, '_blank', 'noopener,noreferrer')}
+                        className="text-primary-600 hover:text-primary-700 underline"
+                      >
                         Просмотреть открытку
-                      </a>
+                      </button>
                     ) : '-'}
                   </td>
                   <td className="border p-3 text-secondary-700">{item.errorMessage || '-'}</td>

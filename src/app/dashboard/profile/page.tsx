@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import api, { profileApi } from '@/lib/api';
 import { format } from 'date-fns';
 import { getRole } from '@/lib/auth';
+import SafeImage from '@/components/SafeImage';
 
 interface EmployeeProfile {
   id: number;
@@ -224,7 +225,7 @@ export default function ProfilePage() {
     <div className="max-w-4xl mx-auto space-y-8">
       {/* Заголовок */}
       <div>
-        <h1 className="text-3xl mb-6 text-primary-800">Мой профиль</h1>
+        <h1 className="text-3xl mb-6 text-neutral-800">Мой профиль</h1>
         
         {/* Сообщения */}
         {message && (
@@ -239,7 +240,7 @@ export default function ProfilePage() {
       {/* Основная информация */}
       <div className="bg-white p-6 rounded-lg shadow">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-semibold">Основная информация</h2>
+          <h2 className="text-2xl font-semibold text-neutral-800">Основная информация</h2>
           {!editing && (
             <button
               onClick={() => setEditing(true)}
@@ -254,7 +255,7 @@ export default function ProfilePage() {
           <form onSubmit={handleProfileUpdate} className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium mb-2">Имя</label>
+                <label className="block text-sm font-medium mb-2 text-neutral-700">Имя</label>
                 <input
                   type="text"
                   value={profileForm.firstName}
@@ -264,7 +265,7 @@ export default function ProfilePage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-2">Фамилия</label>
+                <label className="block text-sm font-medium mb-2 text-neutral-700">Фамилия</label>
                 <input
                   type="text"
                   value={profileForm.lastName}
@@ -274,10 +275,10 @@ export default function ProfilePage() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-2">
+                <label className="block text-sm font-medium mb-2 text-primary-700">
                   Дата рождения
                   {userRole !== 'hr' && (
-                    <span className="text-secondary-500 text-xs ml-2">(только для HR)</span>
+                    <span className="text-neutral-500 text-xs ml-2">(только для HR)</span>
                   )}
                 </label>
                 <input
@@ -334,11 +335,13 @@ export default function ProfilePage() {
                   <div className="absolute -bottom-2 -right-2 flex space-x-1">
                     <button
                       onClick={() => document.getElementById('photo-upload')?.click()}
-                      className="bg-blue-600 text-white p-1 rounded-full text-xs hover:bg-blue-700"
+                      className="bg-blue-600 text-white p-2 rounded-full hover:bg-blue-700 transition-colors"
                       disabled={uploadingPhoto}
                       title="Изменить фото"
                     >
-                      ✏️
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"></path>
+                      </svg>
                     </button>
                     <button
                       onClick={handleDeletePhoto}
@@ -357,11 +360,20 @@ export default function ProfilePage() {
                   </div>
                   <button
                     onClick={() => document.getElementById('photo-upload')?.click()}
-                    className="absolute -bottom-2 -right-2 bg-green-600 text-white p-1 rounded-full text-xs hover:bg-green-700"
+                    className="absolute -bottom-2 -right-2 bg-green-600 text-white p-2 rounded-full hover:bg-green-700 transition-colors"
                     disabled={uploadingPhoto}
                     title="Загрузить фото"
                   >
-                    {uploadingPhoto ? '⏳' : '➕'}
+                    {uploadingPhoto ? (
+                      <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                      </svg>
+                    ) : (
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                      </svg>
+                    )}
                   </button>
                 </div>
               )}
@@ -373,15 +385,15 @@ export default function ProfilePage() {
                 className="hidden"
               />
               <div>
-                <h3 className="text-xl font-semibold">{profile.firstName} {profile.lastName}</h3>
-                <p className="text-secondary-700">{profile.email}</p>
+                <h3 className="text-xl font-semibold text-primary-900">{profile.firstName} {profile.lastName}</h3>
+                <p className="text-primary-700">{profile.email}</p>
               </div>
             </div>
             
             <div className="space-y-2">
-              <p><strong>Дата рождения:</strong> {format(new Date(profile.birthDate), 'dd.MM.yyyy')}</p>
-              <p><strong>Отдел:</strong> {profile.department?.name || 'Не указан'}</p>
-              <p><strong>Должность:</strong> {profile.position?.name || 'Не указана'}</p>
+              <p className="text-primary-900"><strong>Дата рождения:</strong> {format(new Date(profile.birthDate), 'dd.MM.yyyy')}</p>
+              <p className="text-primary-900"><strong>Отдел:</strong> {profile.department?.name || 'Не указан'}</p>
+              <p className="text-primary-900"><strong>Должность:</strong> {profile.position?.name || 'Не указана'}</p>
             </div>
           </div>
         )}
@@ -389,17 +401,17 @@ export default function ProfilePage() {
 
       {/* Настройки предпочтений получения поздравлений */}
       <div className="bg-white p-6 rounded-lg shadow">
-        <h2 className="text-2xl font-semibold mb-6">Настройки предпочтений получения поздравлений</h2>
+        <h2 className="text-2xl font-semibold text-neutral-800 mb-6">Настройки предпочтений получения поздравлений</h2>
         
         <div className="space-y-6">
           {/* Каналы уведомлений */}
           <div>
-            <h3 className="text-lg font-medium mb-4">Каналы уведомлений</h3>
+            <h3 className="text-lg font-medium mb-4 text-neutral-700">Каналы уведомлений</h3>
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="font-medium">Email-уведомления</p>
-                  <p className="text-sm text-secondary-600">Получать уведомления о предстоящих днях рождения коллег</p>
+                  <p className="font-medium text-neutral-700">Email-уведомления</p>
+                  <p className="text-sm text-neutral-600">Получать уведомления о предстоящих днях рождения коллег</p>
                 </div>
                 <label className="relative inline-flex items-center cursor-pointer">
                   <input
@@ -414,8 +426,8 @@ export default function ProfilePage() {
               
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="font-medium">Уведомления в приложении</p>
-                  <p className="text-sm text-secondary-600">Получать уведомления в веб-интерфейсе системы</p>
+                  <p className="font-medium text-neutral-700">Уведомления в приложении</p>
+                  <p className="text-sm text-neutral-600">Получать уведомления в веб-интерфейсе системы</p>
                 </div>
                 <label className="relative inline-flex items-center cursor-pointer">
                   <input
@@ -432,10 +444,10 @@ export default function ProfilePage() {
 
           {/* Настройки времени */}
           <div>
-            <h3 className="text-lg font-medium mb-4">Настройки времени</h3>
+            <h3 className="text-lg font-medium mb-4 text-neutral-700">Настройки времени</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium mb-2">Напоминать за (дней)</label>
+                <label className="block text-sm font-medium mb-2 text-neutral-700">Напоминать за (дней)</label>
                 <select
                   value={notificationSettings.reminderDaysBefore}
                   onChange={(e) => handleNotificationToggle('reminderDaysBefore', parseInt(e.target.value))}
@@ -450,7 +462,7 @@ export default function ProfilePage() {
               </div>
               
               <div>
-                <label className="block text-sm font-medium mb-2">Время отправки</label>
+                <label className="block text-sm font-medium mb-2 text-neutral-700">Время отправки</label>
                 <input
                   type="time"
                   value={notificationSettings.sendTime}
@@ -463,12 +475,12 @@ export default function ProfilePage() {
 
           {/* Настройки приватности */}
           <div>
-            <h3 className="text-lg font-medium mb-4">Настройки приватности</h3>
+            <h3 className="text-lg font-medium mb-4 text-neutral-700">Настройки приватности</h3>
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="font-medium">Показывать день рождения публично</p>
-                  <p className="text-sm text-secondary-600">Разрешить коллегам видеть ваш день рождения в списке</p>
+                  <p className="font-medium text-neutral-700">Показывать день рождения публично</p>
+                  <p className="text-sm text-neutral-600">Разрешить коллегам видеть ваш день рождения в списке</p>
                 </div>
                 <label className="relative inline-flex items-center cursor-pointer">
                   <input
@@ -483,8 +495,8 @@ export default function ProfilePage() {
               
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="font-medium">Разрешить персонализацию открыток</p>
-                  <p className="text-sm text-secondary-600">Позволить коллегам добавлять персональные сообщения к поздравлениям</p>
+                  <p className="font-medium text-neutral-700">Разрешить персонализацию открыток</p>
+                  <p className="text-sm text-neutral-600">Позволить коллегам добавлять персональные сообщения к поздравлениям</p>
                 </div>
                 <label className="relative inline-flex items-center cursor-pointer">
                   <input
@@ -503,10 +515,10 @@ export default function ProfilePage() {
 
       {/* Смена пароля */}
       <div className="bg-white p-6 rounded-lg shadow">
-        <h2 className="text-2xl font-semibold mb-4">Смена пароля</h2>
+        <h2 className="text-2xl font-semibold text-neutral-800 mb-4">Смена пароля</h2>
         <form onSubmit={handlePasswordChange} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium mb-2">Текущий пароль</label>
+            <label className="block text-sm font-medium mb-2 text-neutral-700">Текущий пароль</label>
             <input
               type="password"
               value={passwordForm.currentPassword}
@@ -517,7 +529,7 @@ export default function ProfilePage() {
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium mb-2">Новый пароль</label>
+              <label className="block text-sm font-medium mb-2 text-neutral-700">Новый пароль</label>
               <input
                 type="password"
                 value={passwordForm.newPassword}
@@ -528,7 +540,7 @@ export default function ProfilePage() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium mb-2">Подтвердите пароль</label>
+              <label className="block text-sm font-medium mb-2 text-neutral-700">Подтвердите пароль</label>
               <input
                 type="password"
                 value={passwordForm.confirmPassword}
@@ -552,54 +564,45 @@ export default function ProfilePage() {
       {/* История поздравлений */}
       {profile.BirthdayCardHistory && profile.BirthdayCardHistory.length > 0 && (
         <div className="bg-white p-6 rounded-lg shadow">
-          <h2 className="text-2xl font-semibold mb-4">Последние поздравления</h2>
+          <h2 className="text-2xl font-semibold text-neutral-800 mb-4">Последние поздравления</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {profile.BirthdayCardHistory.slice(0, 6).map((card) => (
               <div key={card.id} className="border rounded-lg overflow-hidden hover:shadow-md transition-shadow">
                 <div className="aspect-square bg-secondary-100 flex items-center justify-center">
                   {card.imageUrl && card.imageUrl.trim() ? (
-                    <img
+                    <SafeImage
                       src={card.imageUrl.trim()}
                       alt={`Открытка: ${card.template.name}`}
                       className="max-w-full max-h-full object-contain"
-                      onError={(e) => {
-                        const target = e.target as HTMLImageElement;
-                        target.style.display = 'none';
-                        target.nextElementSibling!.classList.remove('hidden');
-                      }}
+                      fallbackText="Открытка недоступна"
                     />
                   ) : (
-                    <div className="hidden text-secondary-500 text-center p-4">
+                    <div className="text-secondary-500 text-center p-4">
                       <svg className="w-12 h-12 mx-auto mb-2" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clipRule="evenodd" />
                       </svg>
                       <p className="text-sm">Открытка недоступна</p>
                     </div>
                   )}
-                  <div className="text-secondary-500 text-center p-4">
-                    <svg className="w-12 h-12 mx-auto mb-2" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2H4zm12 12H4l4-8 3 6 2-4 3 6z" clipRule="evenodd" />
-                    </svg>
-                    <p className="text-sm">Открытка недоступна</p>
+                </div>
+                  <div className="p-3">
+                    <p className="font-medium text-sm">{card.template.name}</p>
+                    <p className="text-xs text-primary-600">
+                      {format(new Date(card.sentAt), 'dd.MM.yyyy HH:mm')}
+                    </p>
+                    <div className="mt-2">
+                      <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                        card.success 
+                          ? 'bg-green-100 text-green-800' 
+                          : 'bg-red-100 text-red-800'
+                      }`}>
+                        {card.success ? '✅ Отправлено' : '❌ Ошибка'}
+                      </span>
+                    </div>
                   </div>
                 </div>
-                <div className="p-3">
-                  <p className="font-medium text-sm">{card.template.name}</p>
-                  <p className="text-xs text-secondary-600">
-                    {format(new Date(card.sentAt), 'dd.MM.yyyy HH:mm')}
-                  </p>
-                  <div className="mt-2">
-                    <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                      card.success 
-                        ? 'bg-green-100 text-green-800' 
-                        : 'bg-red-100 text-red-800'
-                    }`}>
-                      {card.success ? '✅ Отправлено' : '❌ Ошибка'}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            ))}
+              ))
+            }
           </div>
           {profile.BirthdayCardHistory.length > 6 && (
             <div className="mt-4 text-center">

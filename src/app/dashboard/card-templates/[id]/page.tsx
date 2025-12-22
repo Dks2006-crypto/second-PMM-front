@@ -81,41 +81,68 @@ export default function EditCardTemplatePage() {
 
   return (
       <div className="max-w-2xl mx-auto">
-        <h1 className="text-3xl mb-6 text-primary-800">Редактировать шаблон</h1>
-        <form onSubmit={handleSubmit(onSubmit)} className="bg-white p-6 rounded shadow space-y-4">
-          {/* Аналогично форме создания */}
-          <input {...register('name')} placeholder="Название" className="w-full p-2 border" />
-          <input {...register('backgroundImageUrl')} placeholder="URL фона" className="w-full p-2 border" />
-          <textarea {...register('textTemplate')} rows={4} className="w-full p-2 border" />
-          <input {...register('fontSize', { valueAsNumber: true })} type="number" className="w-full p-2 border" />
-          <input {...register('fontColor')} className="w-full p-2 border" />
-          <input {...register('textX', { valueAsNumber: true })} type="number" className="w-full p-2 border" />
-          <input {...register('textY', { valueAsNumber: true })} type="number" className="w-full p-2 border" />
-
-          <select
-            onChange={(e) => setValue('departmentId', e.target.value ? Number(e.target.value) : null)}
-            defaultValue={template.departmentId || ''}
-            className="w-full p-2 border"
-          >
-            <option value="">Без отдела</option>
-            {departments.map((d: any) => (
-              <option key={d.id} value={d.id}>{d.name}</option>
-            ))}
-          </select>
-
-          <select
-            onChange={(e) => setValue('positionId', e.target.value ? Number(e.target.value) : null)}
-            defaultValue={template.positionId || ''}
-            className="w-full p-2 border"
-          >
-            <option value="">Без должности</option>
-            {positions.map((p: any) => (
-              <option key={p.id} value={p.id}>{p.name}</option>
-            ))}
-          </select>
-
-          <button type="submit" className="w-full bg-primary-700 hover:bg-primary-800 text-white py-2 rounded transition">
-            Сохранить
+        <h1 className="text-3xl mb-6 text-neutral-800">Редактировать шаблон</h1>
+        <form onSubmit={handleSubmit(onSubmit)} className="bg-white p-6 rounded-2xl shadow-soft space-y-6">
+          <div>
+            <label className="block text-sm font-medium mb-2 text-primary-700">Название</label>
+            <input {...register('name')} placeholder="Название" className="w-full p-3 border border-primary-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent" />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-2 text-primary-700">URL фонового изображения</label>
+            <input {...register('backgroundImageUrl')} placeholder="https://..." className="w-full p-3 border border-primary-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent" />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-2 text-primary-700">Текст поздравления</label>
+            <textarea {...register('textTemplate')} rows={4} placeholder="Используйте {name} для имени именинника" className="w-full p-3 border border-primary-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent" />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium mb-2 text-primary-700">Размер шрифта</label>
+              <input {...register('fontSize', { valueAsNumber: true })} type="number" className="w-full p-3 border border-primary-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent" />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-2 text-primary-700">Цвет шрифта</label>
+              <input {...register('fontColor')} className="w-full p-3 border border-primary-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent" />
+            </div>
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="block text-sm font-medium mb-2 text-primary-700">X позиция текста</label>
+              <input {...register('textX', { valueAsNumber: true })} type="number" className="w-full p-3 border border-primary-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent" />
+            </div>
+            <div>
+              <label className="block text-sm font-medium mb-2 text-primary-700">Y позиция текста</label>
+              <input {...register('textY', { valueAsNumber: true })} type="number" className="w-full p-3 border border-primary-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent" />
+            </div>
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-2 text-primary-700">Отдел (опционально)</label>
+            <select
+              onChange={(e) => setValue('departmentId', e.target.value ? Number(e.target.value) : null)}
+              defaultValue={template.departmentId || ''}
+              className="w-full p-3 border border-primary-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+            >
+              <option value="">Без отдела</option>
+              {departments.map((d: any) => (
+                <option key={d.id} value={d.id}>{d.name}</option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-2 text-primary-700">Должность (опционально)</label>
+            <select
+              onChange={(e) => setValue('positionId', e.target.value ? Number(e.target.value) : null)}
+              defaultValue={template.positionId || ''}
+              className="w-full p-3 border border-primary-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+            >
+              <option value="">Без должности</option>
+              {positions.map((p: any) => (
+                <option key={p.id} value={p.id}>{p.name}</option>
+              ))}
+            </select>
+          </div>
+          <button type="submit" className="w-full bg-neutral-600 hover:bg-neutral-700 text-white py-3 px-4 rounded-xl transition-colors font-medium">
+            Сохранить изменения
           </button>
         </form>
       </div>

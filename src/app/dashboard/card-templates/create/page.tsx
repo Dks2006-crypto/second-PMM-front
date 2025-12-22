@@ -39,13 +39,12 @@ export default function CreateCardTemplatePage() {
   const [loading, setLoading] = useState(true);
   const [noBackground, setNoBackground] = useState(false);
 
-  
-    useEffect(() => {
-      const role = getRole();
-      if (role !== 'hr') {
-        router.push('/dashboard'); // или /login
-      }
-    }, [router]);
+  useEffect(() => {
+    const role = getRole();
+    if (role !== 'hr') {
+      router.push('/dashboard');
+    }
+  }, [router]);
 
   useEffect(() => {
     Promise.all([
@@ -80,62 +79,93 @@ export default function CreateCardTemplatePage() {
   };
 
   return (
-      <div className="max-w-2xl mx-auto">
-        <h1 className="text-3xl mb-6 text-primary-800">Создать шаблон открытки</h1>
-        <form onSubmit={handleSubmit(onSubmit)} className="bg-white p-6 rounded shadow space-y-4">
-          <input {...register('name')} placeholder="Название" className="w-full p-2 border" />
+    <div className="max-w-2xl mx-auto">
+      <h1 className="text-3xl mb-6 text-neutral-800">Создать шаблон открытки</h1>
+      <form onSubmit={handleSubmit(onSubmit)} className="bg-white p-6 rounded-2xl shadow-soft space-y-6">
+        <div>
+          <label className="block text-sm font-medium mb-2 text-primary-700">Название</label>
+          <input {...register('name')} placeholder="Название" className="w-full p-3 border border-primary-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent" />
+        </div>
+        
+        <div className="space-y-4">
+          <label className="flex items-center space-x-2 text-primary-700">
+            <input 
+              type="checkbox" 
+              checked={noBackground}
+              onChange={(e) => handleNoBackgroundChange(e.target.checked)}
+              className="rounded border-primary-300 text-primary-600 focus:ring-primary-500"
+            />
+            <span className="text-sm text-primary-600">Без фонового изображения (белый фон)</span>
+          </label>
           
-          <div className="space-y-2">
-            <label className="flex items-center space-x-2">
-              <input 
-                type="checkbox" 
-                checked={noBackground}
-                onChange={(e) => handleNoBackgroundChange(e.target.checked)}
-                className="rounded"
-              />
-              <span className="text-sm">Без фонового изображения (белый фон)</span>
-            </label>
-            
-            {!noBackground && (
-              <>
-                <input {...register('backgroundImageUrl')} placeholder="URL фонового изображения" className="w-full p-2 border" />
-                {errors.backgroundImageUrl && (
-                  <p className="text-red-500 text-sm">{errors.backgroundImageUrl.message}</p>
-                )}
-              </>
-            )}
+          {!noBackground && (
+            <div>
+              <label className="block text-sm font-medium mb-2 text-primary-700">URL фонового изображения</label>
+              <input {...register('backgroundImageUrl')} placeholder="https://..." className="w-full p-3 border border-primary-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent" />
+              {errors.backgroundImageUrl && (
+                <p className="text-red-500 text-sm mt-1">{errors.backgroundImageUrl.message}</p>
+              )}
+            </div>
+          )}
+        </div>
+        
+        <div>
+          <label className="block text-sm font-medium mb-2 text-primary-700">Текст поздравления</label>
+          <textarea {...register('textTemplate')} placeholder="Используйте {name} для имени именинника" rows={4} className="w-full p-3 border border-primary-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent" />
+        </div>
+        
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium mb-2 text-primary-700">Размер шрифта</label>
+            <input {...register('fontSize', { valueAsNumber: true })} type="number" placeholder="48" className="w-full p-3 border border-primary-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent" />
           </div>
-          
-          <textarea {...register('textTemplate')} placeholder="Текст (используйте {name} для имени)" rows={4} className="w-full p-2 border" />
-          <input {...register('fontSize', { valueAsNumber: true })} type="number" placeholder="Размер шрифта" className="w-full p-2 border" />
-          <input {...register('fontColor')} placeholder="Цвет шрифта (#FFFFFF)" className="w-full p-2 border" />
-          <input {...register('textX', { valueAsNumber: true })} type="number" placeholder="X позиция текста" className="w-full p-2 border" />
-          <input {...register('textY', { valueAsNumber: true })} type="number" placeholder="Y позиция текста" className="w-full p-2 border" />
+          <div>
+            <label className="block text-sm font-medium mb-2 text-primary-700">Цвет шрифта</label>
+            <input {...register('fontColor')} placeholder="#FFFFFF" className="w-full p-3 border border-primary-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent" />
+          </div>
+        </div>
+        
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium mb-2 text-primary-700">X позиция текста</label>
+            <input {...register('textX', { valueAsNumber: true })} type="number" placeholder="100" className="w-full p-3 border border-primary-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent" />
+          </div>
+          <div>
+            <label className="block text-sm font-medium mb-2 text-primary-700">Y позиция текста</label>
+            <input {...register('textY', { valueAsNumber: true })} type="number" placeholder="200" className="w-full p-3 border border-primary-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent" />
+          </div>
+        </div>
 
+        <div>
+          <label className="block text-sm font-medium mb-2 text-primary-700">Отдел (опционально)</label>
           <select
             onChange={(e) => setValue('departmentId', e.target.value ? Number(e.target.value) : undefined)}
-            className="w-full p-2 border"
+            className="w-full p-3 border border-primary-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent"
           >
             <option value="">Без отдела</option>
             {departments.map((d: any) => (
               <option key={d.id} value={d.id}>{d.name}</option>
             ))}
           </select>
+        </div>
 
+        <div>
+          <label className="block text-sm font-medium mb-2 text-primary-700">Должность (опционально)</label>
           <select
             onChange={(e) => setValue('positionId', e.target.value ? Number(e.target.value) : undefined)}
-            className="w-full p-2 border"
+            className="w-full p-3 border border-primary-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent"
           >
             <option value="">Без должности</option>
             {positions.map((p: any) => (
               <option key={p.id} value={p.id}>{p.name}</option>
             ))}
           </select>
+        </div>
 
-          <button type="submit" className="w-full bg-primary-700 hover:bg-primary-800 text-white py-2 rounded transition">
-            Создать шаблон
-          </button>
-        </form>
-      </div>
+        <button type="submit" className="w-full bg-primary-600 hover:bg-primary-700 text-white py-3 px-4 rounded-xl transition-all duration-200 hover:shadow-lg font-medium">
+          Создать шаблон
+        </button>
+      </form>
+    </div>
   );
 }
