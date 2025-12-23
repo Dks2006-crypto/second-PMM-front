@@ -86,6 +86,15 @@ export const profileApi = {
 
   // Получение должностей
   getPositions: () => api.get('/positions'),
+
+  // Создание должности (только HR)
+  createPosition: (name: string) => api.post('/positions', { name }),
+
+  // Обновление должности (только HR)
+  updatePosition: (id: number, name: string) => api.patch(`/positions/${id}`, { name }),
+
+  // Удаление должности (только HR)
+  deletePosition: (id: number) => api.delete(`/positions/${id}`),
 };
 
 export default api;
