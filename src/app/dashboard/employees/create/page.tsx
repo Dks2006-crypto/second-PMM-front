@@ -76,8 +76,20 @@ export default function CreateEmployeePage() {
 
   const loadAllPositions = async () => {
     try {
-      const response = await profileApi.getPositions();
-      setPositions(response.data);
+      const response = await profileApi.getPositionsWithDepartments();
+      
+      // Обрабатываем данные должностей, извлекая информацию об отделах
+      const processedPositions = response.data.map((position: any) => {
+        const department = position.employees?.[0]?.department;
+        return {
+          id: position.id,
+          name: position.name,
+          departmentId: department?.id,
+          department: department ? { name: department.name } : null,
+        };
+      });
+      
+      setPositions(processedPositions);
     } catch (error) {
       console.error('Ошибка загрузки должностей:', error);
     }
@@ -85,8 +97,22 @@ export default function CreateEmployeePage() {
 
   const loadPositionsByDepartment = async (departmentId: number) => {
     try {
-      const response = await profileApi.getPositionsByDepartment(departmentId);
-      setPositions(response.data);
+      const response = await profileApi.getPositionsWithDepartments();
+      
+      // Обрабатываем данные должностей и фильтруем по отделу
+      const processedPositions = response.data
+        .map((position: any) => {
+          const department = position.employees?.[0]?.department;
+          return {
+            id: position.id,
+            name: position.name,
+            departmentId: department?.id,
+            department: department ? { name: department.name } : null,
+          };
+        })
+        .filter((position: any) => position.departmentId === departmentId);
+      
+      setPositions(processedPositions);
     } catch (error) {
       console.error('Ошибка загрузки должностей отдела:', error);
     }

@@ -42,10 +42,23 @@ export default function PositionsPage() {
   const loadPositions = async () => {
     try {
       const [positionsRes, departmentsRes] = await Promise.all([
-        profileApi.getPositions(),
+        profileApi.getPositionsWithDepartments(),
         profileApi.getDepartments()
       ]);
-      setPositions(positionsRes.data);
+      
+      // Обрабатываем данные должностей, извлекая информацию об отделах
+      const processedPositions = positionsRes.data.map((position: any) => {
+        // Находим первый отдел из сотрудников на этой должности
+        const department = position.employees?.[0]?.department;
+        return {
+          id: position.id,
+          name: position.name,
+          departmentId: department?.id,
+          department: department ? { name: department.name } : null,
+        };
+      });
+      
+      setPositions(processedPositions);
       setDepartments(departmentsRes.data);
     } catch (error) {
       alert('Ошибка загрузки данных');
