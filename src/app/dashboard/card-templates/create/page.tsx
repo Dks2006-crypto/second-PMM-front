@@ -39,12 +39,7 @@ export default function CreateCardTemplatePage() {
   const [loading, setLoading] = useState(true);
   const [noBackground, setNoBackground] = useState(false);
 
-  useEffect(() => {
-    const role = getRole();
-    if (role !== 'hr') {
-      router.push('/dashboard');
-    }
-  }, [router]);
+
 
   useEffect(() => {
     Promise.all([

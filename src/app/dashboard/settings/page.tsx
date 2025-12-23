@@ -26,13 +26,6 @@ export default function SettingsPage() {
   });
 
   const router = useRouter();
-  
-    useEffect(() => {
-      const role = getRole();
-      if (role !== 'hr') {
-        router.push('/dashboard'); // или /login
-      }
-    }, [router]);
 
   useEffect(() => {
     api.get('/mailing-settings')

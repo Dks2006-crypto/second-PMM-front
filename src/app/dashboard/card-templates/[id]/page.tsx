@@ -36,14 +36,6 @@ export default function EditCardTemplatePage() {
     resolver: zodResolver(schema),
   });
 
-  
-    useEffect(() => {
-      const role = getRole();
-      if (role !== 'hr') {
-        router.push('/dashboard'); // или /login
-      }
-    }, [router]);
-
   useEffect(() => {
     Promise.all([
       api.get(`/card-templates/${id}`),

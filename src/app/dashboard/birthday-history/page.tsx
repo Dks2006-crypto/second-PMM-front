@@ -24,22 +24,11 @@ export default function BirthdayHistoryPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const role = getRole();
-    if (role !== 'hr') {
-      router.push('/dashboard');
-      return;
-    }
-
     api.get('/employees/birthday-history')
       .then(res => setHistory(res.data))
       .catch(err => {
         console.error('Ошибка при загрузке истории:', err);
-        if (err.response?.status === 403 || err.response?.status === 401) {
-          alert('Доступ запрещён или сессия истекла');
-          router.push('/login');
-        } else {
-          alert('Ошибка загрузки истории: ' + (err.response?.data?.message || err.message));
-        }
+        alert('Ошибка загрузки истории: ' + (err.response?.data?.message || err.message));
       })
       .finally(() => setLoading(false));
   }, [router]);

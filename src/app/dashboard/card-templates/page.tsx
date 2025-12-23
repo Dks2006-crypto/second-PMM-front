@@ -26,12 +26,7 @@ export default function CardTemplatesPage() {
 
   const router = useRouter();
 
-  useEffect(() => {
-    const role = getRole();
-    if (role !== 'hr') {
-      router.push('/dashboard'); // или /login
-    }
-  }, [router]);
+
 
   useEffect(() => {
     api.get('/card-templates')
