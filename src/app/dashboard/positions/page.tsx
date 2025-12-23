@@ -10,14 +10,18 @@ import { Button } from '@/components/ui/Button';
 interface Position {
   id: number;
   name: string;
+  departmentId?: number;
+  department?: { name: string } | null;
   employeeCount?: number;
 }
 
 export default function PositionsPage() {
   const [positions, setPositions] = useState<Position[]>([]);
+  const [departments, setDepartments] = useState<{id: number, name: string}[]>([]);
   const [loading, setLoading] = useState(true);
   const [showAddForm, setShowAddForm] = useState(false);
   const [newPositionName, setNewPositionName] = useState('');
+  const [selectedDepartmentId, setSelectedDepartmentId] = useState<number | ''>('');
   const [saving, setSaving] = useState(false);
 
   const router = useRouter();
@@ -37,10 +41,14 @@ export default function PositionsPage() {
 
   const loadPositions = async () => {
     try {
-      const response = await profileApi.getPositions();
-      setPositions(response.data);
+      const [positionsRes, departmentsRes] = await Promise.all([
+        profileApi.getPositions(),
+        profileApi.getDepartments()
+      ]);
+      setPositions(positionsRes.data);
+      setDepartments(departmentsRes.data);
     } catch (error) {
-      alert('Ошибка загрузки должностей');
+      alert('Ошибка загрузки данных');
     } finally {
       setLoading(false);
     }
@@ -52,8 +60,12 @@ export default function PositionsPage() {
 
     setSaving(true);
     try {
-      await profileApi.createPosition(newPositionName.trim());
+      await profileApi.createPosition(
+        newPositionName.trim(), 
+        selectedDepartmentId ? Number(selectedDepartmentId) : undefined
+      );
       setNewPositionName('');
+      setSelectedDepartmentId('');
       setShowAddForm(false);
       await loadPositions();
       alert('Должность успешно создана');
@@ -109,6 +121,24 @@ export default function PositionsPage() {
                 required
               />
             </div>
+            <div>
+              <label className="block text-sm font-medium text-black mb-2">
+                Отдел (опционально)
+              </label>
+              <select
+                value={selectedDepartmentId}
+                onChange={(e) => setSelectedDepartmentId(e.target.value ? Number(e.target.value) : '')}
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
+                disabled={saving}
+              >
+                <option value="">Выберите отдел</option>
+                {departments.map((dept) => (
+                  <option key={dept.id} value={dept.id}>
+                    {dept.name}
+                  </option>
+                ))}
+              </select>
+            </div>
             <div className="flex flex-col sm:flex-row gap-3">
               <Button 
                 type="submit" 
@@ -123,6 +153,7 @@ export default function PositionsPage() {
                 onClick={() => {
                   setShowAddForm(false);
                   setNewPositionName('');
+                  setSelectedDepartmentId('');
                 }}
                 variant="outline"
                 className="w-full sm:w-auto"
@@ -153,6 +184,16 @@ export default function PositionsPage() {
               render: (pos) => (
                 <div className="text-black font-medium">
                   {pos.name}
+                </div>
+              )
+            },
+            {
+              key: 'department',
+              header: 'Отдел',
+              mobileLabel: 'Отдел',
+              render: (pos) => (
+                <div className="text-black">
+                  {pos.department?.name || '-'}
                 </div>
               )
             },

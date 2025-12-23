@@ -13,6 +13,8 @@ interface Department {
 interface Position {
   id: number;
   name: string;
+  departmentId?: number;
+  department?: { name: string } | null;
 }
 
 export default function CreateEmployeePage() {
@@ -52,8 +54,16 @@ export default function CreateEmployeePage() {
 
     // Загружаем отделы и должности
     loadDepartments();
-    loadPositions();
   }, [router]);
+
+  // Загружаем должности при изменении отдела
+  useEffect(() => {
+    if (formData.departmentId) {
+      loadPositionsByDepartment(parseInt(formData.departmentId));
+    } else {
+      loadAllPositions();
+    }
+  }, [formData.departmentId]);
 
   const loadDepartments = async () => {
     try {
@@ -64,13 +74,26 @@ export default function CreateEmployeePage() {
     }
   };
 
-  const loadPositions = async () => {
+  const loadAllPositions = async () => {
     try {
       const response = await profileApi.getPositions();
       setPositions(response.data);
     } catch (error) {
       console.error('Ошибка загрузки должностей:', error);
     }
+  };
+
+  const loadPositionsByDepartment = async (departmentId: number) => {
+    try {
+      const response = await profileApi.getPositionsByDepartment(departmentId);
+      setPositions(response.data);
+    } catch (error) {
+      console.error('Ошибка загрузки должностей отдела:', error);
+    }
+  };
+
+  const loadPositions = async () => {
+    await loadAllPositions();
   };
 
   const showMessage = (type: 'success' | 'error', text: string) => {
@@ -126,7 +149,17 @@ export default function CreateEmployeePage() {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    
+    if (name === 'departmentId') {
+      // При смене отдела сбрасываем выбранную должность
+      setFormData(prev => ({ 
+        ...prev, 
+        [name]: value,
+        positionId: '' // Сбрасываем должность при смене отдела
+      }));
+    } else {
+      setFormData(prev => ({ ...prev, [name]: value }));
+    }
   };
 
   return (

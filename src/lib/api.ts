@@ -88,13 +88,16 @@ export const profileApi = {
   getPositions: () => api.get('/positions'),
 
   // Создание должности (только HR)
-  createPosition: (name: string) => api.post('/positions', { name }),
+  createPosition: (name: string, departmentId?: number) => api.post('/positions', { name, departmentId }),
 
   // Обновление должности (только HR)
-  updatePosition: (id: number, name: string) => api.patch(`/positions/${id}`, { name }),
+  updatePosition: (id: number, name: string, departmentId?: number) => api.patch(`/positions/${id}`, { name, departmentId }),
 
   // Удаление должности (только HR)
   deletePosition: (id: number) => api.delete(`/positions/${id}`),
+
+  // Получение должностей по отделу
+  getPositionsByDepartment: (departmentId: number) => api.get(`/positions/by-department/${departmentId}`),
 };
 
 export default api;
