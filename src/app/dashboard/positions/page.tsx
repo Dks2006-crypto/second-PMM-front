@@ -58,11 +58,18 @@ export default function PositionsPage() {
     e.preventDefault();
     if (!newPositionName.trim()) return;
 
+    const positionData = {
+      name: newPositionName.trim(),
+      departmentId: selectedDepartmentId ? Number(selectedDepartmentId) : undefined
+    };
+    
+    console.log('Создаем должность с данными:', positionData);
+
     setSaving(true);
     try {
       await profileApi.createPosition(
-        newPositionName.trim(), 
-        selectedDepartmentId ? Number(selectedDepartmentId) : undefined
+        positionData.name, 
+        positionData.departmentId
       );
       setNewPositionName('');
       setSelectedDepartmentId('');
@@ -70,6 +77,7 @@ export default function PositionsPage() {
       await loadPositions();
       alert('Должность успешно создана');
     } catch (error: any) {
+      console.error('Ошибка при создании должности:', error);
       alert(error.response?.data?.message || 'Ошибка создания должности');
     } finally {
       setSaving(false);
@@ -138,6 +146,13 @@ export default function PositionsPage() {
                   </option>
                 ))}
               </select>
+              {selectedDepartmentId && (
+                <div className="mt-2 p-2 bg-blue-50 border border-blue-200 rounded-md">
+                  <p className="text-sm text-blue-800">
+                    ✓ Отдел будет назначен: <strong>{departments.find(d => d.id === selectedDepartmentId)?.name}</strong>
+                  </p>
+                </div>
+              )}
             </div>
             <div className="flex flex-col sm:flex-row gap-3">
               <Button 
@@ -193,7 +208,14 @@ export default function PositionsPage() {
               mobileLabel: 'Отдел',
               render: (pos) => (
                 <div className="text-black">
-                  {pos.department?.name || '-'}
+                  {pos.department?.name ? (
+                    <div className="flex items-center gap-2">
+                      <span className="inline-block w-2 h-2 bg-blue-500 rounded-full"></span>
+                      {pos.department.name}
+                    </div>
+                  ) : (
+                    <span className="text-gray-400">Не привязана</span>
+                  )}
                 </div>
               )
             },
