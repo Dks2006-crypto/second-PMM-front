@@ -1,5 +1,4 @@
 import DashboardWrapper from '@/components/DashboardWrapper';
-import AuthGuard from '@/components/AuthGuard';
 
 export default function DashboardLayout({
   children,
@@ -7,10 +6,8 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    <AuthGuard>
-      <DashboardWrapper>
-        {children}
-      </DashboardWrapper>
-    </AuthGuard>
+    <DashboardWrapper>
+      {children}
+    </DashboardWrapper>
   );
 }

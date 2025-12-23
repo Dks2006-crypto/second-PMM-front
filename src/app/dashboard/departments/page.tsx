@@ -23,17 +23,8 @@ export default function DepartmentsPage() {
   const router = useRouter();
 
   useEffect(() => {
-    if (!getRole()) {
-      router.push('/login');
-      return;
-    }
-    if (getRole() !== 'hr') {
-      alert('У вас нет прав доступа к этой странице');
-      router.push('/dashboard');
-      return;
-    }
     loadDepartments();
-  }, [router]);
+  }, []);
 
   const loadDepartments = async () => {
     try {

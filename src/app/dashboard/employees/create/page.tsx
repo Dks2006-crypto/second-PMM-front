@@ -41,20 +41,9 @@ export default function CreateEmployeePage() {
   });
 
   useEffect(() => {
-    // Проверяем роль пользователя
-    if (!getRole()) {
-      router.push('/login');
-      return;
-    }
-
-    if (getRole() !== 'hr') {
-      router.push('/dashboard');
-      return;
-    }
-
     // Загружаем отделы и должности
     loadDepartments();
-  }, [router]);
+  }, []);
 
   // Загружаем должности при изменении отдела
   useEffect(() => {
