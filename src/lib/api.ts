@@ -75,6 +75,15 @@ export const profileApi = {
   // Получение отделов
   getDepartments: () => api.get('/departments'),
 
+  // Создание отдела (только HR)
+  createDepartment: (name: string) => api.post('/departments', { name }),
+
+  // Обновление отдела (только HR)
+  updateDepartment: (id: number, name: string) => api.patch(`/departments/${id}`, { name }),
+
+  // Удаление отдела (только HR)
+  deleteDepartment: (id: number) => api.delete(`/departments/${id}`),
+
   // Получение должностей
   getPositions: () => api.get('/positions'),
 };
