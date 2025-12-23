@@ -214,7 +214,7 @@ export default function DashboardWrapper({ children }: { children: React.ReactNo
         <div className="max-w-7xl mx-auto px-2 sm:px-4 md:px-6 lg:px-8 w-full">
           {/* Desktop Navigation - теперь видна на sm и выше */}
           <div className="hidden sm:flex flex-wrap gap-1 py-2 sm:py-3 md:py-4 w-full">
-            {[...navigationItems, ...hrItems].map((item) => {
+            {[...navigationItems, ...(role === 'hr' ? hrItems : [])].map((item) => {
               const Icon = item.icon;
               return (
                 <Link
@@ -232,7 +232,7 @@ export default function DashboardWrapper({ children }: { children: React.ReactNo
           {/* Mobile Navigation */}
           <div className={`md:hidden ${isMobileMenuOpen ? 'block' : 'hidden'} bg-white border-b border-neutral-200 shadow-lg`}>
             <div className="py-2 space-y-1 border-t border-neutral-200 bg-white">
-              {[...navigationItems, ...hrItems].map((item) => {
+              {[...navigationItems, ...(role === 'hr' ? hrItems : [])].map((item) => {
                 const Icon = item.icon;
                 return (
                   <Link

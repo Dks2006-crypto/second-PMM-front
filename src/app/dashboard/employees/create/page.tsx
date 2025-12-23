@@ -19,6 +19,7 @@ interface Position {
 
 export default function CreateEmployeePage() {
   const router = useRouter();
+  const userRole = getRole();
   const [loading, setLoading] = useState(false);
   const [departments, setDepartments] = useState<Department[]>([]);
   const [positions, setPositions] = useState<Position[]>([]);
@@ -41,9 +42,14 @@ export default function CreateEmployeePage() {
   });
 
   useEffect(() => {
+    // Проверяем роль пользователя
+    if (userRole !== 'hr') {
+      router.push('/dashboard');
+      return;
+    }
     // Загружаем отделы и должности
     loadDepartments();
-  }, []);
+  }, [userRole, router]);
 
   // Загружаем должности при изменении отдела
   useEffect(() => {

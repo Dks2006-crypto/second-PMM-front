@@ -20,10 +20,15 @@ interface HistoryItem {
 
 export default function BirthdayHistoryPage() {
   const router = useRouter();
+  const userRole = getRole();
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (userRole !== 'hr') {
+      router.push('/dashboard');
+      return;
+    }
     api.get('/employees/birthday-history')
       .then(res => setHistory(res.data))
       .catch(err => {
@@ -31,7 +36,7 @@ export default function BirthdayHistoryPage() {
         alert('Ошибка загрузки истории: ' + (err.response?.data?.message || err.message));
       })
       .finally(() => setLoading(false));
-  }, [router]);
+  }, [userRole, router]);
 
   const successCount = history.filter(h => h.success).length;
   const errorCount = history.filter(h => !h.success).length;

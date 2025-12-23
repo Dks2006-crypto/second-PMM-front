@@ -21,10 +21,15 @@ export default function DepartmentsPage() {
   const [saving, setSaving] = useState(false);
 
   const router = useRouter();
+  const userRole = getRole();
 
   useEffect(() => {
+    if (userRole !== 'hr') {
+      router.push('/dashboard');
+      return;
+    }
     loadDepartments();
-  }, []);
+  }, [userRole, router]);
 
   const loadDepartments = async () => {
     try {

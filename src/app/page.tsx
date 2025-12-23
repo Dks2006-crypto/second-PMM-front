@@ -12,6 +12,9 @@ export default function Home() {
     
     if (role) {
       router.push('/dashboard');
+    } else {
+      // Если пользователь не авторизован, перенаправляем на форму входа
+      router.push('/login');
     }
   }, [router]);
 

@@ -24,6 +24,7 @@ type FormData = z.infer<typeof schema>;
 
 export default function CreateCardTemplatePage() {
   const router = useRouter();
+  const userRole = getRole();
   const { register, handleSubmit, formState: { errors }, setValue } = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues: {
@@ -39,9 +40,11 @@ export default function CreateCardTemplatePage() {
   const [loading, setLoading] = useState(true);
   const [noBackground, setNoBackground] = useState(false);
 
-
-
   useEffect(() => {
+    if (userRole !== 'hr') {
+      router.push('/dashboard');
+      return;
+    }
     Promise.all([
       api.get('/departments'),
       api.get('/positions'),
@@ -50,7 +53,7 @@ export default function CreateCardTemplatePage() {
       setPositions(posRes.data);
       setLoading(false);
     }).catch(() => alert('Ошибка загрузки справочников'));
-  }, []);
+  }, [userRole, router]);
 
   const onSubmit = async (data: FormData) => {
     try {

@@ -26,8 +26,13 @@ export default function SettingsPage() {
   });
 
   const router = useRouter();
+  const userRole = getRole();
 
   useEffect(() => {
+    if (userRole !== 'hr') {
+      router.push('/dashboard');
+      return;
+    }
     api.get('/mailing-settings')
       .then(res => {
         const data = res.data;
@@ -39,7 +44,7 @@ export default function SettingsPage() {
         setValue('fromEmail', data.fromEmail || '');
         setValue('retryAttempts', data.retryAttempts || 3);
       });
-  }, [setValue]);
+  }, [userRole, router, setValue]);
 
   const onSubmit = async (data: FormData) => {
     try {

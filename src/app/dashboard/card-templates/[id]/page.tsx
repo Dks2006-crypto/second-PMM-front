@@ -25,6 +25,7 @@ type FormData = z.infer<typeof schema>;
 export default function EditCardTemplatePage() {
   const router = useRouter();
   const params = useParams();
+  const userRole = getRole();
   const id = Number(params.id);
 
   const [template, setTemplate] = useState<any>(null);
@@ -37,6 +38,10 @@ export default function EditCardTemplatePage() {
   });
 
   useEffect(() => {
+    if (userRole !== 'hr') {
+      router.push('/dashboard');
+      return;
+    }
     Promise.all([
       api.get(`/card-templates/${id}`),
       api.get('/departments'),
@@ -58,7 +63,7 @@ export default function EditCardTemplatePage() {
       setPositions(posRes.data);
       setLoading(false);
     }).catch(() => alert('Ошибка загрузки'));
-  }, [id, setValue]);
+  }, [userRole, router, id, setValue]);
 
   const onSubmit = async (data: FormData) => {
     try {

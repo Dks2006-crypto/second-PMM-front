@@ -25,15 +25,18 @@ export default function CardTemplatesPage() {
   const [loading, setLoading] = useState(true);
 
   const router = useRouter();
-
-
+  const userRole = getRole();
 
   useEffect(() => {
+    if (userRole !== 'hr') {
+      router.push('/dashboard');
+      return;
+    }
     api.get('/card-templates')
       .then(res => setTemplates(res.data))
       .catch(() => alert('Ошибка загрузки шаблонов'))
       .finally(() => setLoading(false));
-  }, []);
+  }, [userRole, router]);
 
 
   const handleDelete = async (id: number) => {

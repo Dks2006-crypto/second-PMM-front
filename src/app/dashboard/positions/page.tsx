@@ -25,10 +25,7 @@ export default function PositionsPage() {
   const [saving, setSaving] = useState(false);
 
   const router = useRouter();
-
-  useEffect(() => {
-    loadPositions();
-  }, []);
+  const userRole = getRole();
 
   const loadPositions = async () => {
     try {
@@ -58,6 +55,14 @@ export default function PositionsPage() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (userRole !== 'hr') {
+      router.push('/dashboard');
+      return;
+    }
+    loadPositions();
+  }, [userRole, router]);
 
   const handleAddPosition = async (e: React.FormEvent) => {
     e.preventDefault();
