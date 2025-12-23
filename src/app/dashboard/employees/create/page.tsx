@@ -80,7 +80,8 @@ export default function CreateEmployeePage() {
       
       // Обрабатываем данные должностей, извлекая информацию об отделах
       const processedPositions = response.data.map((position: any) => {
-        const department = position.employees?.[0]?.department;
+        const cardTemplate = position.CardTemplate?.[0];
+        const department = cardTemplate?.department;
         return {
           id: position.id,
           name: position.name,
@@ -102,7 +103,8 @@ export default function CreateEmployeePage() {
       // Обрабатываем данные должностей и фильтруем по отделу
       const processedPositions = response.data
         .map((position: any) => {
-          const department = position.employees?.[0]?.department;
+          const cardTemplate = position.CardTemplate?.[0];
+          const department = cardTemplate?.department;
           return {
             id: position.id,
             name: position.name,

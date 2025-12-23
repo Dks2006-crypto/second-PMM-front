@@ -48,8 +48,9 @@ export default function PositionsPage() {
       
       // Обрабатываем данные должностей, извлекая информацию об отделах
       const processedPositions = positionsRes.data.map((position: any) => {
-        // Находим первый отдел из сотрудников на этой должности
-        const department = position.employees?.[0]?.department;
+        // Находим первый отдел из CardTemplate для этой должности
+        const cardTemplate = position.CardTemplate?.[0];
+        const department = cardTemplate?.department;
         return {
           id: position.id,
           name: position.name,
